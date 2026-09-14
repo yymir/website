@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tors gate 1964 – Kristiansand S</title>
+<style>
+  :root{
+    --grunn:#ccd3ce;        /* kartbakgrunn */
+    --bygg:#aeb7b2;         /* bygningsflate */
+    --bygg-kant:#8b9691;
+    --vei:#ffffff;
+    --blekk:#16242b;
+    --blekk-svak:#5d6b6e;
+    --amber:#c07d12;        /* valgt hus */
+    --amber-lys:#f0d9a8;
+    --teal:#125d5c;         /* forretning */
+    --kort:#fbfaf7;
+    --kant:#c2cac5;
+    --kart: ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --tekst: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; background:var(--grunn); color:var(--blekk);
+    font-family:var(--tekst); line-height:1.6;
+  }
+  .ramme{max-width:660px;margin:0 auto;padding:0 14px 64px}
+
+  /* ---------- masthead ---------- */
+  header{padding:38px 0 20px}
+  h1{
+    font-family:var(--kart); font-weight:600; font-size:clamp(34px,10vw,52px);
+    letter-spacing:-.02em; margin:0; line-height:1;
+  }
+  .undertittel{
+    font-family:var(--kart); font-size:14px; letter-spacing:.06em;
+    color:var(--blekk-svak); margin:10px 0 0;
+  }
+  .ingress{margin:18px 0 0; font-size:16.5px; max-width:52ch}
+  .tall{display:flex;gap:26px;margin:22px 0 0;font-family:var(--kart)}
+  .tall div{line-height:1.25}
+  .tall b{display:block;font-size:26px;font-weight:600}
+  .tall span{font-size:12.5px;color:var(--blekk-svak);letter-spacing:.04em}
+
+  /* ---------- søk ---------- */
+  .sokrad{display:flex;gap:8px;margin:24px 0 6px;flex-wrap:wrap}
+  input[type=search]{
+    flex:1 1 200px; min-width:0; font-family:var(--tekst); font-size:16px;
+    padding:11px 14px; border:1px solid var(--bygg-kant); border-radius:2px;
+    background:var(--kort); color:var(--blekk);
+  }
+  input[type=search]:focus{outline:2px solid var(--amber);outline-offset:1px}
+  button.knapp{
+    font-family:var(--kart); font-size:14px; padding:11px 14px; cursor:pointer;
+    background:var(--kort); border:1px solid var(--bygg-kant); border-radius:2px; color:var(--blekk);
+  }
+  button.knapp:hover{background:#fff}
+  .treff{font-family:var(--kart);font-size:13.5px;color:var(--blekk-svak);min-height:22px;margin:0 0 6px}
+
+  /* ---------- gata ---------- */
+  .gate{position:relative;background:var(--grunn)}
+  .kompass{
+    font-family:var(--kart);font-size:12px;letter-spacing:.14em;color:var(--blekk-svak);
+    display:flex;justify-content:space-between;padding:0 2px 8px
+  }
+  .rad{display:flex;align-items:stretch;gap:0}
+  .side{flex:1 1 0;display:flex;flex-wrap:wrap;gap:6px;padding:5px 0;min-width:0}
+  .side.nord{justify-content:flex-end}
+  .side.sor{justify-content:flex-start}
+  .asfalt{
+    flex:0 0 58px;background:var(--vei);position:relative;
+    border-left:1px solid #e3e7e4;border-right:1px solid #e3e7e4;
+  }
+  .asfalt::after{
+    content:"";position:absolute;left:50%;top:0;bottom:0;width:0;
+    border-left:2px dashed #d3dad6;transform:translateX(-1px);
+  }
+
+  .tomt{
+    font-family:var(--kart); cursor:pointer; -webkit-appearance:none; appearance:none;
+    background:var(--bygg); border:1px solid var(--bygg-kant); border-radius:1px;
+    color:var(--blekk); padding:9px 11px 8px; min-width:52px; text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    transition:background .12s ease, box-shadow .12s ease;
+  }
+  .tomt:hover{background:#c2cac5}
+  .tomt:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+  .tomt .nr{font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1}
+  .tomt .prikker{display:flex;gap:2.5px;height:5px;align-items:center}
+  .tomt .prikker i{width:4px;height:4px;border-radius:50%;background:var(--blekk);opacity:.55;display:block}
+  .tomt .prikker i.f{background:var(--teal);opacity:.95;border-radius:0}
+  .tomt[aria-expanded=true]{background:var(--amber-lys);border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+  .tomt.dempet{opacity:.3}
+  .tomt.funn{background:var(--amber-lys);border-color:var(--amber)}
+
+  .kryss{display:flex;align-items:center;gap:10px;padding:14px 0 12px}
+  .kryss .strek{flex:1;height:7px;background:var(--vei);border-top:1px solid #e3e7e4;border-bottom:1px solid #e3e7e4}
+  .kryss .navn{font-family:var(--kart);font-size:12.5px;letter-spacing:.05em;color:var(--blekk-svak);white-space:nowrap}
+
+  /* ---------- detaljer ---------- */
+  .kort{
+    background:var(--kort);border:1px solid var(--kant);border-left:4px solid var(--amber);
+    margin:2px 0 12px;padding:16px 16px 12px;
+  }
+  .kort h2{font-family:var(--kart);font-size:20px;margin:0 0 2px;font-weight:600}
+  .kort .stedsnote{font-family:var(--kart);font-size:12.5px;color:var(--blekk-svak);margin:0 0 14px}
+  .person{padding:11px 0;border-top:1px solid #e9e6df}
+  .person:first-of-type{border-top:0;padding-top:2px}
+  .person .navn{font-size:17.5px;font-weight:700}
+  .person .navn .merke{
+    font-family:var(--kart);font-size:10.5px;font-weight:600;letter-spacing:.06em;
+    color:var(--teal);border:1px solid var(--teal);padding:1px 5px;margin-left:7px;
+    vertical-align:2px;border-radius:2px;display:inline-block
+  }
+  .person .stilling{font-style:italic;color:#3f4b4e;font-size:15.5px}
+  .person .okonomi{font-family:var(--kart);font-size:13.5px;color:var(--blekk-svak);margin-top:4px}
+  .person .okonomi b{color:var(--blekk);font-weight:600}
+  details.rå{margin-top:6px}
+  details.rå summary{
+    font-family:var(--kart);font-size:12px;color:var(--blekk-svak);cursor:pointer;
+    list-style:none;display:inline-block;border-bottom:1px dotted var(--blekk-svak)
+  }
+  details.rå summary::-webkit-details-marker{display:none}
+  details.rå p{
+    font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;font-size:12.5px;
+    background:#f1efe8;border:1px solid #e3e0d7;padding:8px 10px;margin:8px 0 0;
+    white-space:pre-wrap;color:#3f4b4e
+  }
+  .tomt-kort{font-family:var(--kart);font-size:14px;color:var(--blekk-svak)}
+
+  footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--bygg-kant);font-size:14px;color:var(--blekk-svak)}
+  footer p{margin:0 0 10px;max-width:56ch}
+  .skjult{display:none}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+  @media print{.sokrad,.treff{display:none}.kort{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="ramme">
+
+  <header>
+    <h1>Tors gate</h1>
+    <p class="undertittel">Kristiansand S &nbsp;·&nbsp; 1964</p>
+    <p class="ingress">Trykk på et hus for å se hvem som sto oppført der.</p>
+    <div class="tall">
+      <div><b id="t-hus">–</b><span>husnummer</span></div>
+      <div><b id="t-pers">–</b><span>oppføringer</span></div>
+      <div><b id="t-firma">–</b><span>forretninger</span></div>
+    </div>
+  </header>
+
+  <div class="sokrad">
+    <input type="search" id="sok" placeholder="Søk etter navn, f.eks. Knutsen" autocomplete="off" aria-label="Søk etter navn">
+    <button class="knapp" id="alle" type="button">Åpne alle</button>
+  </div>
+  <p class="treff" id="treff"></p>
+
+  <div class="kompass"><span>vest ← mot Odins gate</span><span>mot Østre ringvei → øst</span></div>
+  <div class="gate" id="gate"></div>
+
+  <footer>
+    <p>Navnene er hentet fra en oppslagsbok fra 1964 for Kristiansand S, med formue og inntekt for inntektsåret 1962. Bare de som faktisk er oppført i boka er med her – husstander uten oppføring mangler.</p>
+    <p>Husene er tegnet skjematisk, ikke i målestokk: oddetall på nordsiden, partall på sørsiden, i rekkefølge fra vest mot øst. Rekkefølgen og sidegatene følger dagens kart (kart.1881.no, © Norkart AS / Geovekst og kommunene / OpenStreetMap). Husnummer er endret enkelte steder siden 1964, så et nummer her trenger ikke peke på den samme bygningen i dag.</p>
+    <p>Trykk «Rå tekst fra boka» under et navn for å se den opprinnelige linja slik den ble lest av maskinen.</p>
+  </footer>
+</div>
+
+<script>
+const HUS = [{"n":1,"b":"a","label":"1A","p":[{"navn":"Arnhild Jacobsen","stilling":"","type":"Bolig","formue":null,"inntekt":7300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["93"],"ocrs":["Arnhild, Torsg. 1a, 7300"]},{"navn":"Alf Johnsen","stilling":"","type":"Bolig","formue":87000,"inntekt":20000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["98"],"ocrs":["Alf, Torsg. 1 a, 87,000, 20,000"]},{"navn":"Marit Johnsen","stilling":"","type":"Bolig","formue":null,"inntekt":15800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["98"],"ocrs":["Marit, Torsg. 1 a, 15,800"]}]},{"n":2,"b":"","label":"2","p":[{"navn":"Dagny Due","stilling":"","type":"Bolig","formue":null,"inntekt":12600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["61"],"ocrs":["Due, Dagny, Torsg. 2, 12,600"]},{"navn":"Jørgen Tellefsen","stilling":"","type":"Bolig","formue":26000,"inntekt":21600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["159"],"ocrs":["Jørgen, Torsg. 2, 26,000, 21,600"]}]},{"n":3,"b":"","label":"3","p":[{"navn":"Aage Knutsen","stilling":"","type":"Bolig","formue":null,"inntekt":20200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["104"],"ocrs":["Aage, Torsg. 3, 20,200"]},{"navn":"Marius Knutsen","stilling":"","type":"Bolig","formue":8000,"inntekt":15300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["104"],"ocrs":["Marius, Torsg. 3, 8000, 15,300"]},{"navn":"Svein Knutsen","stilling":"","type":"Bolig","formue":null,"inntekt":15100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["104"],"ocrs":["Svein, Torsg. 3, 15,100"]},{"navn":"Sverre Knutsen","stilling":"","type":"Bolig","formue":8000,"inntekt":14100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["104"],"ocrs":["Sverre, Torsg. 3, 8000, 14,100"]}]},{"n":4,"b":"","label":"4","p":[{"navn":"Nils Haugland","stilling":"","type":"Bolig","formue":null,"inntekt":null,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["84"],"ocrs":["Nils, Torsg. 4, se Haugland, Tomas"]},{"navn":"Kjell Seland","stilling":"","type":"Bolig","formue":26000,"inntekt":8600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["146"],"ocrs":["Kjell, Torsg. 4, 26,000, 8600"]},{"navn":"Sigrid Seland","stilling":"","type":"Bolig","formue":null,"inntekt":8900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["146"],"ocrs":["Sigridl, Torsg. 4, 8900"]}]},{"n":4,"b":"a","label":"4A","p":[{"navn":"Johannes Eliassen","stilling":"","type":"Bolig","formue":null,"inntekt":15200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["64"],"ocrs":["Johannes, Torsg. 4a, 15,200"]},{"navn":"Agnes Osestad","stilling":"","type":"Bolig","formue":null,"inntekt":10200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["134"],"ocrs":["Osestad, Agnes,. Torsg. 4a, 10,200"]},{"navn":"Einar Osestad","stilling":"","type":"Bolig","formue":60000,"inntekt":19900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["134"],"ocrs":["Einar, Torsg. 4a, 60,000, 19,900"]},{"navn":"O A Seland","stilling":"tapetserer, møbelforretning i Festningsg. 14","type":"Bolig (forretning annet sted)","formue":37000,"inntekt":16500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["146"],"ocrs":["O A, tapetserer, møbelforr., Festningsg. 14, box Torsg. 4a, 37,000, 16,500"]},{"navn":"Ragnar Seland","stilling":"","type":"Bolig","formue":null,"inntekt":16800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["146"],"ocrs":["Ragnar, Torsg. 4a, 16,800"]}]},{"n":5,"b":"","label":"5","p":[{"navn":"Ragnhild Ellingsen","stilling":"","type":"Bolig","formue":null,"inntekt":12900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["65"],"ocrs":["Ragnhild, Torsg. 5, 12,900"]},{"navn":"Gunnar Knutsen","stilling":"","type":"Bolig","formue":null,"inntekt":16300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["104"],"ocrs":["Gunnar, Torsg. 5, 16,300"]},{"navn":"Torfinn Knutsen","stilling":"","type":"Bolig","formue":27000,"inntekt":18600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["104"],"ocrs":["Torfinn, Torsg. 5, 27,000, 18,600"]}]},{"n":6,"b":"","label":"6","p":[{"navn":"Andreas Hæraas","stilling":"","type":"Bolig","formue":null,"inntekt":15200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["90"],"ocrs":["Hæraas, Andreas, Torsg. 6,, 15,200"]},{"navn":"Ragnhild Hæraas","stilling":"","type":"Bolig","formue":null,"inntekt":9400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["90"],"ocrs":["Ragnhild, Torsg. 6, 9400"]},{"navn":"Gudrun Marie Kaaland","stilling":"","type":"Bolig","formue":12000,"inntekt":10000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["109"],"ocrs":["Kaaland, Gudrun Marie, Torsg. 6, 12,000, 10,000"]},{"navn":"Jenny Kaaland","stilling":"","type":"Bolig","formue":16000,"inntekt":10600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["109"],"ocrs":["Jenny, Torsg. 6, 16,000, 10,600"]},{"navn":"Kirsti Kaaland","stilling":"","type":"Bolig","formue":27000,"inntekt":0,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["109"],"ocrs":["Kirsti, Torsg. 6, 27,000, 0"]}]},{"n":6,"b":"a","label":"6A","p":[{"navn":"Erling Berntsen","stilling":"","type":"Bolig","formue":28000,"inntekt":24000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["50"],"ocrs":["Erling, Torsg. 6a, 28,000, 24,000"]},{"navn":"Trygve Christiansen","stilling":"","type":"Bolig","formue":25000,"inntekt":16400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["58"],"ocrs":["Trygve, Torsg. 6a, 25,000, 16,400"]},{"navn":"Dagfinn Vestaby","stilling":"","type":"Bolig","formue":null,"inntekt":19400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["169"],"ocrs":["Vestaby, Dagfinn, Torsg. 6a, 19,400"]}]},{"n":7,"b":"","label":"7","p":[{"navn":"Gustav Knudsen","stilling":"","type":"Bolig","formue":27000,"inntekt":15100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["103"],"ocrs":["Gustav, Torsg. 7, 27,000, 15,100"]},{"navn":"Magda Torstensen","stilling":"","type":"Bolig","formue":15000,"inntekt":3900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["164"],"ocrs":["‘ Magda, Torsg. 7, 15,000, 3900"]}]},{"n":8,"b":"","label":"8","p":[{"navn":"Egil Krossen","stilling":"","type":"Bolig","formue":null,"inntekt":6700,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["108"],"ocrs":["Egil, Torsg. 8, 6700"]},{"navn":"Gunnar B Krossen","stilling":"frukt og grønnsaker en gros, medinnehaver av Allé-Kiosken","type":"Bolig/forretning","formue":180000,"inntekt":36500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["108","549"],"ocrs":["Krossen, Gunnar B, Torsg. 8","Torsg. 8, 180,000, 36,500, medinneh. av Allé-Kiosken"]},{"navn":"Torsgatens Kolonial A/s","stilling":"aksjekap. 10.000 kr., disp. Gunnar B Krossen","type":"Forretning","formue":22000,"inntekt":0,"del":"Hovedliste (Kristiansand S.)","firma":true,"sider":["164","564"],"ocrs":["Torsgatens Kolonial A/s, aksjekap. 10,000kr., disp. Gunnar B Krossen, Torsg. 8, 22,000, 0","Torsgatens Kolonial A/s, Torsg. 8"]}]},{"n":9,"b":"","label":"9","p":[{"navn":"Bent Skaar","stilling":"","type":"Bolig","formue":32000,"inntekt":27400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["148"],"ocrs":["Bent, Torsg. 9, 32,000, 27,400"]},{"navn":"Bjørg Skaar","stilling":"","type":"Bolig","formue":null,"inntekt":6000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["148"],"ocrs":["Bjørg, Torsg. 9, 6000"]}]},{"n":10,"b":"","label":"10","p":[{"navn":"Eva Johnsen","stilling":"","type":"Bolig","formue":null,"inntekt":15200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["98"],"ocrs":["Eva, Torsg. 10, 15,200"]},{"navn":"Astrid Løvdal","stilling":"","type":"Bolig","formue":null,"inntekt":6600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["117"],"ocrs":["Løvdal, Astrid, Torsg. 10, 6600"]},{"navn":"Oskar Løvdal","stilling":"","type":"Bolig","formue":null,"inntekt":17400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["117"],"ocrs":["Oskar, Torsg. 10, 17,400"]},{"navn":"Willy Løvdal","stilling":"","type":"Bolig","formue":null,"inntekt":7000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["117"],"ocrs":["Willy, Torsg. 10, 7000, 14.500"]},{"navn":"Nils Røynaas","stilling":"","type":"Bolig","formue":null,"inntekt":15700,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["144"],"ocrs":["Nils, Torsg. 10, 15,700"]}]},{"n":11,"b":"","label":"11","p":[{"navn":"I Sten","stilling":"","type":"Bolig","formue":null,"inntekt":null,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["151"],"ocrs":["Sten, I, Torsg. 11, se Solbyggkol."]},{"navn":"Karl Sten","stilling":"","type":"Bolig","formue":17000,"inntekt":13900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["151"],"ocrs":["Karl, Torsg. 11, 17,000, 13,900"]}]},{"n":12,"b":"","label":"12","p":[{"navn":"John Strandmyr","stilling":"","type":"Bolig","formue":30000,"inntekt":37300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["152"],"ocrs":["John, Torsg. 12, 30,000, 37,300"]}]},{"n":13,"b":"","label":"13","p":[{"navn":"Olga Jensen","stilling":"","type":"Bolig","formue":null,"inntekt":8800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["95"],"ocrs":["Olga, Torsg. 13, 8800"]},{"navn":"Nils Ryen","stilling":"","type":"Bolig","formue":31000,"inntekt":8500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["142"],"ocrs":["Nils, Torsg. 13, 31,000, 8500"]},{"navn":"Edvarda Simonsen","stilling":"","type":"Bolig","formue":12000,"inntekt":0,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["146"],"ocrs":["Edvarda, Torsg. 13, 12,000, 0"]}]},{"n":14,"b":"","label":"14","p":[{"navn":"Helge Larsen","stilling":"","type":"Bolig","formue":null,"inntekt":9800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["111"],"ocrs":["Helge, Torsg. 14, 9800"]},{"navn":"Ole Teodor Larsen","stilling":"","type":"Bolig","formue":null,"inntekt":16200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["112"],"ocrs":["Ole Teodor, Torsg. 14, 16,200"]},{"navn":"Harry Myhre","stilling":"","type":"Bolig","formue":44000,"inntekt":35800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["122"],"ocrs":["Harry, Torsg. 14, 44,000, 35,800"]}]},{"n":15,"b":"","label":"15","p":[{"navn":"Bjarne Bergstøl","stilling":"","type":"Bolig","formue":null,"inntekt":22500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["50"],"ocrs":["Bjarne, Torsg. 15, 22,500"]},{"navn":"Bjørn Bergstøl","stilling":"","type":"Bolig","formue":6000,"inntekt":17800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["50"],"ocrs":["Bjørn, Torsg. 15, 6000, 17,800"]},{"navn":"Gunnar Langenes","stilling":"","type":"Bolig","formue":null,"inntekt":19100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["110"],"ocrs":["Gunnar, Torsg. 15, 19,100"]},{"navn":"Birger Olsen","stilling":"","type":"Bolig","formue":null,"inntekt":16100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["130"],"ocrs":["Birger, Torsg. 15, 16,100"]}]},{"n":16,"b":"a","label":"16A","p":[{"navn":"Ivan Andreassen","stilling":"","type":"Bolig","formue":7000,"inntekt":20500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["44"],"ocrs":["Ivan, Torsg. 16a, 7000, 20,500"]},{"navn":"Odd Ilebæk","stilling":"","type":"Bolig","formue":40000,"inntekt":32200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["92"],"ocrs":["Ilebæk, Odd, Torsg. 16 a, 40,000, 32,200"]},{"navn":"Gunhild Markseth","stilling":"","type":"Bolig","formue":26000,"inntekt":5000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["118"],"ocrs":["Markseth, Gunhild, Torsg. 16a, 26,000, 5000"]},{"navn":"Leif Olsen","stilling":"","type":"Bolig","formue":null,"inntekt":24000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["131"],"ocrs":["Leif, Torsg. 16a, 24,000"]},{"navn":"Daniel Sandnes","stilling":"","type":"Bolig","formue":14000,"inntekt":14300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["145"],"ocrs":["Daniel, Torsg. 16a, 14,000, 14,300"]}]},{"n":17,"b":"","label":"17","p":[{"navn":"Gunstein Bygland","stilling":"","type":"Bolig","formue":24000,"inntekt":18500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["56"],"ocrs":["Gunstein, Torsg. 17, 24,000, 18,500"]}]},{"n":18,"b":"","label":"18","p":[{"navn":"Ingvald Larsen","stilling":"","type":"Bolig","formue":8000,"inntekt":14900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["112"],"ocrs":["Ingvald, Torsg. 18, 8000, 14,900"]},{"navn":"Anton Stranden","stilling":"","type":"Bolig","formue":32000,"inntekt":27500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["152"],"ocrs":["Stranden, Anton, Torsg. 18, 32,000, 27,500"]},{"navn":"Edvin Stranden","stilling":"","type":"Bolig","formue":null,"inntekt":16500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["152"],"ocrs":["Edvin, Torsg. 18, 16,500 S. TRRNDBERGi ItTeEnNiIhNDdUuSsTtRriI SITRRNDBERGi Tangen - Kristiansand S. Telefon 23382 GRAVMONUMENTER"]}]},{"n":19,"b":"","label":"19","p":[{"navn":"Olav Bjørn Langeid","stilling":"","type":"Bolig","formue":null,"inntekt":10000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["110"],"ocrs":["Olav Bjørn, Torsg. 19, 10,000"]},{"navn":"Søren Schmidt","stilling":"","type":"Bolig","formue":19000,"inntekt":17300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["145"],"ocrs":["Søren, Torsg. 19, 19,000, 17,300"]},{"navn":"Elias Stoveland","stilling":"","type":"Bolig","formue":null,"inntekt":8000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["152"],"ocrs":["Elias, Torsg. 19, 8000"]}]},{"n":19,"b":"a","label":"19A","p":[{"navn":"Søren Haaberg","stilling":"","type":"Bolig","formue":16000,"inntekt":23200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["91"],"ocrs":["Søren, Torsg. 19a, 16,000, 23,200"]},{"navn":"Rolf Øslebø","stilling":"","type":"Bolig","formue":7000,"inntekt":10800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["174"],"ocrs":["Bolf, Torsg. 19 a, 7000, 10,800"]}]},{"n":20,"b":"","label":"20","p":[{"navn":"Hans Louis Falkenberg","stilling":"","type":"Bolig","formue":11000,"inntekt":24000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["67"],"ocrs":["Falkenberg, Hans Louis, Torsg. 20, 11,000, 24,000"]},{"navn":"Ivar Frustøl","stilling":"","type":"Bolig","formue":27000,"inntekt":17800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["72"],"ocrs":["Frustøl, Ivar, Torsg. 20, 27,000, 17,800"]}]},{"n":21,"b":"","label":"21","p":[{"navn":"Arnulf Jahnsen","stilling":"","type":"Bolig","formue":13000,"inntekt":16400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["94"],"ocrs":["Jahnsen, Amulf, Torsg. 21, 13,000, 16,400"]},{"navn":"Kurt Jahnsen","stilling":"","type":"Bolig","formue":null,"inntekt":11300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["94"],"ocrs":["Kurt, Torsg. 21, 11,300 M & E (Marit Jahnsen), damefrisør, Skipperg. 25"]},{"navn":"Trygve Pedersen","stilling":"","type":"Bolig","formue":null,"inntekt":19400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["136"],"ocrs":["Trygve, Torsg. 21,. 19,400"]}]},{"n":22,"b":"","label":"22","p":[{"navn":"Harald Fredheim","stilling":"","type":"Bolig","formue":17000,"inntekt":22100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["71"],"ocrs":["Fredheim, Harald, Torsg. 22, 17,000, 22,100"]},{"navn":"Helge Hanson","stilling":"","type":"Bolig","formue":null,"inntekt":17200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["83"],"ocrs":["Hanson, Helge, Torsg. 22, 17,200"]},{"navn":"Stein Hanson","stilling":"","type":"Bolig","formue":null,"inntekt":7000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["83"],"ocrs":["Stein, Torsg. 22, 7000"]}]},{"n":23,"b":"","label":"23","p":[{"navn":"Kaare Bjørnstad","stilling":"","type":"Bolig","formue":6000,"inntekt":24300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["53"],"ocrs":["Kaare, Torsg. 23, 6000, 24,300"]},{"navn":"Gudny Heia","stilling":"","type":"Bolig","formue":null,"inntekt":11600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["85"],"ocrs":["Heia, Gudny, Torsg. 23, 11,600"]},{"navn":"Nils Heia","stilling":"","type":"Bolig","formue":21000,"inntekt":4800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["85"],"ocrs":["Nils, Torsg. 23, 21,000, 4800"]},{"navn":"Karin Frisørsalong (Karin Bjørnstad)","stilling":"","type":"Forretning","formue":null,"inntekt":null,"del":"Bransjeavdeling","firma":true,"sider":["100","539"],"ocrs":["Karin Frisørsalong, Torsg. 23","Karin Frisørsalong (Karin Bjømstad), Tors gt. 23"]}]},{"n":24,"b":"","label":"24","p":[{"navn":"Leif Kvivik","stilling":"","type":"Bolig","formue":null,"inntekt":19200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["109"],"ocrs":["Kvivik, Leif, Torsg. 24, 19,200"]},{"navn":"Sverre Spjelkavik","stilling":"","type":"Bolig","formue":null,"inntekt":25900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["150"],"ocrs":["Spjelkavik, Sverre, Torsg. 24, 25,900"]}]},{"n":25,"b":"","label":"25","p":[{"navn":"Aage Svendsen","stilling":"","type":"Bolig","formue":null,"inntekt":13900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["155"],"ocrs":["Aage, Torsg. 25, 13,900"]},{"navn":"Ruth Svendsen","stilling":"","type":"Bolig","formue":null,"inntekt":13900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["155"],"ocrs":["Ruth, Torsg. 25, 13,900"]}]},{"n":26,"b":"","label":"26","p":[{"navn":"Olav Aagedal","stilling":"","type":"Bolig","formue":null,"inntekt":16500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["174"],"ocrs":["Olav, Torsg. 26, 16,500"]},{"navn":"Else Aanensen","stilling":"","type":"Bolig","formue":null,"inntekt":11200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["175"],"ocrs":["Else, Torsg. 26, 11,200"]},{"navn":"Kari Berntsen","stilling":"","type":"Bolig","formue":null,"inntekt":10400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["50"],"ocrs":["Kari, Torsg. 26, 10,400"]},{"navn":"Robert Berntsen","stilling":"","type":"Bolig","formue":11000,"inntekt":12900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["51"],"ocrs":["Robert, Torsg. 26, 11,000, 12,900"]}]},{"n":27,"b":"","label":"27","p":[{"navn":"John Daland","stilling":"","type":"Bolig","formue":null,"inntekt":15100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["59"],"ocrs":["John, Torsg. 27, 15,100"]},{"navn":"Klara Ingebrigtsen","stilling":"","type":"Bolig","formue":null,"inntekt":12900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["92"],"ocrs":["Klara, Torsg. 27, 12,900"]},{"navn":"Erik Smefjell","stilling":"","type":"Bolig","formue":9000,"inntekt":23600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["149"],"ocrs":["Erik, Torsg. 27, 9000, 23,600"]}]},{"n":27,"b":"a","label":"27A","p":[{"navn":"Emly Moen","stilling":"","type":"Bolig","formue":null,"inntekt":11300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["120"],"ocrs":["Emly, Torsg. 27a, 11,300"]}]},{"n":29,"b":"","label":"29","p":[{"navn":"Frank Georg Olsen","stilling":"","type":"Bolig","formue":null,"inntekt":17100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["130"],"ocrs":["Frank Georg, Torsg. 29, 17,100"]},{"navn":"Magnhild Olsen","stilling":"","type":"Bolig","formue":null,"inntekt":6700,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["131"],"ocrs":["Magnhild, Torsg. 29, 6700"]},{"navn":"Oluf Tønnes Osufsen","stilling":"malerm, Industrig.30, bor","type":"Bolig (forretning annet sted)","formue":104000,"inntekt":30000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["134"],"ocrs":["Osufsen, Oluf Tønnes, malerm., Industrig.30, bor Torsg. 29, 104,000, 30,000"]},{"navn":"Torbjørn Osufsen","stilling":"malerm","type":"Bolig","formue":null,"inntekt":9600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["134","573"],"ocrs":["Torbjørn, malerm., Torsg. 29, 9600","Osufsen, Torbjørn, Torsg. 29 Rosenvold & Fjelde, Marvikv. 55"]}]},{"n":31,"b":"","label":"31","p":[{"navn":"Kjell Ormkleiv","stilling":"","type":"Bolig","formue":null,"inntekt":16000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["133"],"ocrs":["Ormkleiv, Kjell, Torsg. 31, 16,000"]},{"navn":"Else Tellefsen","stilling":"","type":"Bolig","formue":33000,"inntekt":8900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["159"],"ocrs":["Else, Torsg. 31, 33,000, 8900"]},{"navn":"Sverre Østerhus","stilling":"","type":"Bolig","formue":12000,"inntekt":22900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["174"],"ocrs":["Sverre, Torsg. 31, 12,000', 22,900"]}]},{"n":31,"b":"a","label":"31A","p":[{"navn":"Thorkild Nateland","stilling":"","type":"Bolig","formue":null,"inntekt":19100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["123"],"ocrs":["Thorlcild, Torsg. 31a, 19,100"]},{"navn":"Thomas Stiansen","stilling":"","type":"Bolig","formue":null,"inntekt":15100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["151"],"ocrs":["Thomas, Torsg. 31a, 15,100"]},{"navn":"Marit Tysse","stilling":"","type":"Bolig","formue":null,"inntekt":7900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["166"],"ocrs":["Tysse, Marit, Torsg. 31a, 7900"]}]},{"n":32,"b":"","label":"32","p":[{"navn":"Lilly Arntsen","stilling":"","type":"Bolig","formue":null,"inntekt":6200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["45"],"ocrs":["Lilly, Torsg. 32, 6200"]},{"navn":"Thorvald Arntsen","stilling":"","type":"Bolig","formue":274000,"inntekt":57400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["45"],"ocrs":["Thorvald, Torsg. 32, 274,000, 57,400"]},{"navn":"Ruteexpressen A/s","stilling":"aksjekap. 16.000 kr., disp. Thv. Arntzen","type":"Forretning","formue":86000,"inntekt":7300,"del":"Hovedliste (Kristiansand S.)","firma":true,"sider":["142","531"],"ocrs":["Ruteexpressen, A/s, aksjekap. 16,000 kr., disp. Thv. Arntzen, Torsg. 32, 86,000, 7300","Ruteexpressen, A/s, Torsg. 32"]}]},{"n":33,"b":"","label":"33","p":[{"navn":"Paul Brandsdal","stilling":"","type":"Bolig","formue":43000,"inntekt":27300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["54"],"ocrs":["Brandsdal, Paul, Torsg. 33, 43,000, 27,300"]}]},{"n":33,"b":"a","label":"33A","p":[{"navn":"Ragnvald Gundersen","stilling":"","type":"Bolig","formue":26000,"inntekt":2300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["77"],"ocrs":["Ragnvald, Torsg. 33a, 26,000, 2300"]},{"navn":"Willy Gundersen","stilling":"","type":"Bolig","formue":null,"inntekt":10000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["77"],"ocrs":["Willy, Torsg. 33a, 10,000"]}]},{"n":34,"b":"","label":"34","p":[{"navn":"Kristiansands Skruefabrik & Mek. Verksted","stilling":"Erling Holte, Oddernes; adresse Holb.g. 9 og Torsg. 34","type":"Forretning","formue":null,"inntekt":null,"del":"Hovedliste (Kristiansand S.)","firma":true,"sider":["107","596"],"ocrs":["Holte, Oddernes, Holb.g. 9 og Torsg. 34","Kr.sand S: Kristiansands Skruefabrik & Mek. Verksted, Holb.g. 9 og Torsg. 34 Skytemattefabrikker"]}]},{"n":35,"b":"","label":"35","p":[{"navn":"Bodil Midtgaard","stilling":"","type":"Bolig","formue":null,"inntekt":14100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["119"],"ocrs":["Midtgaard, Bodil, Torsg. 35, 14,100"]},{"navn":"Olve Midtgaard","stilling":"","type":"Bolig","formue":12000,"inntekt":31200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["119"],"ocrs":["Olve, Torsg. 35, 12,000, 31,200"]},{"navn":"Dagfinn Olsen","stilling":"","type":"Bolig","formue":6000,"inntekt":13500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["130"],"ocrs":["Dagfinn, Torsg. 35, 6000, 13,500"]},{"navn":"Sigvart Olsen","stilling":"","type":"Bolig","formue":9000,"inntekt":16700,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["132"],"ocrs":["Sigvart, Torsg. 35, 9000, 16,700"]}]},{"n":35,"b":"a","label":"35A","p":[{"navn":"Haakon Birkeland","stilling":"","type":"Bolig","formue":236000,"inntekt":24000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["52"],"ocrs":["Haakon, Torsg. 35a, 236,000, 24,000"]},{"navn":"Arnold Olsen","stilling":"","type":"Bolig","formue":7000,"inntekt":18300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["129"],"ocrs":["Arnold, Torsg. 35a, 7000, 18,300"]}]},{"n":37,"b":"","label":"37","p":[{"navn":"Einar Einarson","stilling":"","type":"Bolig","formue":null,"inntekt":22200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["63"],"ocrs":["Einarson, Einar, Torsg. 37, 22,200"]},{"navn":"Arne Sagen","stilling":"","type":"Bolig","formue":6000,"inntekt":13300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["144"],"ocrs":["Sagen, Arne, Torsg. 37, 6000, 13,300"]},{"navn":"Jens Sagen","stilling":"seilmaker og bilsalmaker; båthetter, båtputer, presenninger; forretning Skipperg. 22","type":"Bolig (forretning annet sted)","formue":9000,"inntekt":32300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["144"],"ocrs":["Sagen, Jens, seilm. og bilsalm., båthetter, båtputer, presenninger, Skipperg. 22, tlf. 24652, privat 29073, Torsg. 37, 9000, 32,300"]}]},{"n":37,"b":"a","label":"37A","p":[{"navn":"Lars Marius Olsen","stilling":"","type":"Bolig","formue":13000,"inntekt":18500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["131"],"ocrs":["Lars Marius, Torsg. 37a, 13,000, 18,500"]},{"navn":"Alf Folke Uldal","stilling":"","type":"Bolig","formue":null,"inntekt":24800,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["167"],"ocrs":["Alf Folke, Torsg. 37a, 24,800"]},{"navn":"Wenche Uldal","stilling":"","type":"Bolig","formue":null,"inntekt":9600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["167"],"ocrs":["Wenche, Torsg. 37a, 9600"]}]},{"n":39,"b":"","label":"39","p":[{"navn":"Johnny Pedersen","stilling":"","type":"Bolig","formue":15000,"inntekt":24500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["135"],"ocrs":["Johnny, Torsg. 39, 15,000, 24,500"]},{"navn":"Finn Samuelsen","stilling":"","type":"Bolig","formue":6000,"inntekt":20300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["144"],"ocrs":["Finn, Torsg. 39, 6000, 20,300"]}]},{"n":39,"b":"a","label":"39A","p":[{"navn":"Alf Andersen","stilling":"","type":"Bolig","formue":null,"inntekt":19900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["41"],"ocrs":["Alf, Torsg. 39a, 19,900"]},{"navn":"Anders Engesland","stilling":"","type":"Bolig","formue":null,"inntekt":15300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["65"],"ocrs":["Engesland, Anders, Torsg. 39a, 15,300"]},{"navn":"Frank Pettersen","stilling":"","type":"Bolig","formue":null,"inntekt":16100,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["137"],"ocrs":["Frank, Torsg. 39a, 16,100"]},{"navn":"Nancy Pettersen","stilling":"","type":"Bolig","formue":50000,"inntekt":7500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["137"],"ocrs":["Nancy, Torsg. 39a, 50,000, 7500"]}]},{"n":41,"b":"","label":"41","p":[{"navn":"Erling Lunde","stilling":"","type":"Bolig","formue":null,"inntekt":23300,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["116"],"ocrs":["Erling, Torsg. 41, 23,300"]},{"navn":"Arvid Stangenes","stilling":"","type":"Bolig","formue":null,"inntekt":16200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["150"],"ocrs":["Arvid, Torsg. 41, 16,200 KRISTIANSAND"]},{"navn":"Robert Stangenes","stilling":"","type":"Bolig","formue":null,"inntekt":21600,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["151"],"ocrs":["Robert, Torsg. 41, 21,600"]}]},{"n":41,"b":"a","label":"41A","p":[{"navn":"Sverre Gjertsen","stilling":"","type":"Bolig","formue":11000,"inntekt":23000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["74"],"ocrs":["Sverre, Torsg. 41 a, 11,000, 23,000"]},{"navn":"Aage Svendsen","stilling":"","type":"Bolig","formue":18000,"inntekt":16700,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["155"],"ocrs":["Aage, Torsg. 41a, 18,000, 16,700"]},{"navn":"Bjørg Svendsen","stilling":"","type":"Bolig","formue":null,"inntekt":13700,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["154"],"ocrs":["Bjørg, Torsg. 41 a, 13,700"]}]},{"n":43,"b":"","label":"43","p":[{"navn":"Thor Andersen","stilling":"","type":"Bolig","formue":null,"inntekt":null,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["43"],"ocrs":["Thor, Torsg. 43, se Polyfoto"]},{"navn":"Bodil Olsen","stilling":"","type":"Bolig","formue":null,"inntekt":6700,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["130"],"ocrs":["Bodil, Torsg. 43, 6700"]},{"navn":"Kjell Mardon Olsen","stilling":"","type":"Bolig","formue":15000,"inntekt":23500,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["131"],"ocrs":["Kjell Mardon, Torsg. 43, 15,000, 23,500"]}]},{"n":43,"b":"a","label":"43A","p":[{"navn":"Haakon Hansen","stilling":"","type":"Bolig","formue":27000,"inntekt":18900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["81"],"ocrs":["Haakon, Torsg. 43a, 27,000, 18,900"]},{"navn":"Gunnar Sødal","stilling":"","type":"Bolig","formue":null,"inntekt":15200,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["156"],"ocrs":["Gunnar, Torsg. 43a, 15,200"]}]},{"n":45,"b":"","label":"45","p":[{"navn":"Arnfinn Ommundsen","stilling":"","type":"Bolig","formue":null,"inntekt":25900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["133"],"ocrs":["Arnfinn, Torsg. 45, 25,900 S. 133"]},{"navn":"Sigurd Salvesen","stilling":"","type":"Bolig","formue":12000,"inntekt":27900,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["144"],"ocrs":["Sigurd, Torsg. 45, 12,000, 27,900"]}]},{"n":45,"b":"a","label":"45A","p":[{"navn":"Britt Berge","stilling":"","type":"Bolig","formue":null,"inntekt":7000,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["49"],"ocrs":["Britt, Torsg. 45a, 7000"]},{"navn":"Garmann Berge","stilling":"","type":"Bolig","formue":19000,"inntekt":27400,"del":"Hovedliste (Kristiansand S.)","firma":false,"sider":["49"],"ocrs":["Berge, Garmann, Torsg. 45a, 19,000, 27,400"]}]},{"n":49,"b":"","label":"49","p":[{"navn":"Grenax Plastic Co., A/s","stilling":"plastfabrikk, aksjekap. 215.000 kr., disp. J P Greijner Svendsen","type":"Forretning","formue":251000,"inntekt":6100,"del":"Hovedliste (Kristiansand S.)","firma":true,"sider":["75","547","584"],"ocrs":["Grenax Plastic Co., Torsg. 49 Flyekspedisjoner","Torsg. 49, tlf. *25576, bankgiro 2321/475, postgiro 61307, tlgr.adr. Grenax, 251,000, 6100","Grenax Plastic Co., A/s, Torsg. 49, telefon *25576, tlgr.adr. Grenax"]}]}];
+const KRYSS = {"1": [{"navn": "Odins gate"}], "11": [{"navn": "Freyasdalsveien"}], "14": [{"navn": "Bispeveien"}], "15": [{"navn": "Valhallagata (sørsiden)"}], "16": [{"navn": "Johan Øydegards vei"}], "25": [{"navn": "Østre ringvei"}]};
+
+const par = n => Math.ceil(n/2);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+document.getElementById('t-hus').textContent  = HUS.length;
+document.getElementById('t-pers').textContent = HUS.reduce((a,h)=>a+h.p.length,0);
+const erFirma = p => p.firma || p.type === 'Forretning' || p.type === 'Bolig/forretning';
+document.getElementById('t-firma').textContent= HUS.reduce((a,h)=>a+h.p.filter(erFirma).length,0);
+
+/* ---- bygg gata ---- */
+const gate = document.getElementById('gate');
+const parListe = [...new Set(HUS.map(h => par(h.n)))].sort((a,b)=>a-b);
+
+parListe.forEach(p => {
+  (KRYSS[p]||[]).forEach(k => {
+    const d = document.createElement('div');
+    d.className = 'kryss';
+    d.innerHTML = '<span class="strek"></span><span class="navn">'+esc(k.navn)+'</span><span class="strek"></span>';
+    gate.appendChild(d);
+  });
+
+  const rad = document.createElement('div');
+  rad.className = 'rad';
+  const nord = document.createElement('div'); nord.className = 'side nord';
+  const vei  = document.createElement('div'); vei.className = 'asfalt';
+  const sor  = document.createElement('div'); sor.className  = 'side sor';
+  rad.append(nord, vei, sor);
+  gate.appendChild(rad);
+
+  const holder = document.createElement('div');
+  gate.appendChild(holder);
+
+  HUS.filter(h => par(h.n) === p).forEach(h => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'tomt';
+    b.setAttribute('aria-expanded','false');
+    b.dataset.hus = h.label;
+    const prikker = h.p.map(x => '<i class="'+(erFirma(x)?'f':'')+'"></i>').join('');
+    b.innerHTML = '<span class="nr">'+esc(h.label)+'</span><span class="prikker">'+prikker+'</span>';
+    b.title = h.label + ' – ' + h.p.length + (h.p.length===1?' oppføring':' oppføringer');
+    b.addEventListener('click', () => veksle(h, b, holder));
+    (h.n % 2 ? nord : sor).appendChild(b);
+  });
+});
+
+/* ---- detaljkort ---- */
+function kortHTML(h){
+  const side = h.n % 2 ? 'nordsiden' : 'sørsiden';
+  let s = '<div class="kort"><h2>Tors gate '+esc(h.label)+'</h2>'
+        + '<p class="stedsnote">'+side+' · '+h.p.length+(h.p.length===1?' oppføring':' oppføringer')+' i 1964</p>';
+  h.p.forEach(p => {
+    const MERKE = {'Forretning':'forretning','Bolig/forretning':'bolig + forretning','Bolig (forretning annet sted)':'forretning annen adresse'};
+    const merke = MERKE[p.type] ? '<span class="merke">'+esc(MERKE[p.type])+'</span>' : '';
+    s += '<div class="person"><div class="navn">'+esc(p.navn)+merke+'</div>';
+    if (p.stilling) s += '<div class="stilling">'+esc(p.stilling)+'</div>';
+    s += '<div class="okonomi">boka s. '+p.sider.join(', ')+'</div>';
+    s += '<details class="rå"><summary>Rå tekst fra boka</summary><p>'+esc(p.ocrs.join('\n'))+'</p></details>';
+    s += '</div>';
+  });
+  return s + '</div>';
+}
+
+function veksle(h, knapp, holder){
+  const apen = knapp.getAttribute('aria-expanded') === 'true';
+  if (apen){ knapp.setAttribute('aria-expanded','false'); fjern(h.label, holder); return; }
+  knapp.setAttribute('aria-expanded','true');
+  const d = document.createElement('div');
+  d.dataset.kort = h.label;
+  d.innerHTML = kortHTML(h);
+  holder.appendChild(d);
+}
+function fjern(label, holder){
+  const el = holder.querySelector('[data-kort="'+label+'"]');
+  if (el) el.remove();
+}
+
+/* ---- åpne / lukk alle ---- */
+let alleApne = false;
+document.getElementById('alle').addEventListener('click', e => {
+  alleApne = !alleApne;
+  document.querySelectorAll('.tomt').forEach(b => {
+    const na = b.getAttribute('aria-expanded') === 'true';
+    if (na !== alleApne) b.click();
+  });
+  e.target.textContent = alleApne ? 'Lukk alle' : 'Åpne alle';
+});
+
+/* ---- søk ---- */
+const sok = document.getElementById('sok'), treff = document.getElementById('treff');
+sok.addEventListener('input', () => {
+  const q = sok.value.trim().toLowerCase();
+  const knapper = document.querySelectorAll('.tomt');
+  if (!q){
+    knapper.forEach(b => b.classList.remove('dempet','funn'));
+    treff.textContent = '';
+    return;
+  }
+  let antall = 0, hus = [];
+  knapper.forEach(b => {
+    const h = HUS.find(x => x.label === b.dataset.hus);
+    const n = h.p.filter(p => (p.navn+' '+p.stilling).toLowerCase().includes(q)).length;
+    b.classList.toggle('funn', n > 0);
+    b.classList.toggle('dempet', n === 0);
+    if (n){ antall += n; hus.push(h.label); }
+  });
+  treff.textContent = antall
+    ? antall + (antall===1?' treff':' treff') + ' i nr. ' + hus.join(', ')
+    : 'Ingen treff på «' + sok.value.trim() + '»';
+});
+</script>
+</body>
+</html>
