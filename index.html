@@ -11,50 +11,35 @@
          byttes ut under prefers-color-scheme.
          ================================================================ */
       :root {
-        --papir: #f6f2e7; /* sidebakgrunn */
-        --kort: #fcfaf3; /* kort og felter */
-        --grunn: #dde3d7; /* gresset langs gata */
-        --vei: #eae6db; /* asfalt */
-        --stripe: #c4ad7c; /* midtstripe */
+        --papir: #f5f2ea; /* sidebakgrunn */
+        --kort: #fcfbf6; /* kort og felter */
+        --grunn: #dbdfd6; /* bakken langs gata */
+        --vei: #ebe8df; /* asfalt */
+        --stripe: #c1baa6; /* midtstripe */
         --kant: #cec9b9; /* trykkstrek */
         --kant-svak: #e0dbcc;
         --blekk: #14232a;
         --blekk-svak: #5e6d70;
         --amber: #d2691e; /* valgt hus, rammer og fokus */
-        --amber-kant: #a34d0f;
         --amber-lys: #f4ddab;
         --teal: #0f5f5c; /* forretning */
         --rust: #9c4221; /* tredje aksent */
         --rutenett: rgba(20, 35, 42, 0.055);
 
         /* bygningsflater – mørkere jo flere oppføringer huset har */
-        --bygg-1: #c9d0c8;
-        --bygg-2: #bac3ba;
-        --bygg-3: #aab5ab;
-        --bygg-4: #9aa79c;
-        --bygg-5: #8a988d;
-        --bygg-kant: #8b9691;
         --bygg-tom: #616e6a; /* tomt uten oppføring i boka */
         --bygg-tom-kant: #4d5956;
         --tom-strek: rgba(255, 255, 255, 0.16);
 
         /* seks hustyper, fordelt etter husnummer */
-        --tak-0: #a4685a;
-        --vegg-0: #ece4d6;
-        --tak-1: #6d8375;
-        --vegg-1: #e3e7df;
-        --tak-2: #98707c;
-        --vegg-2: #eae2e2;
-        --tak-3: #6b8296;
-        --vegg-3: #e2e7ec;
-        --tak-4: #a08d64;
-        --vegg-4: #ece7d8;
-        --tak-5: #7d7a8e;
-        --vegg-5: #e5e3e9;
+        --vegg: #e9e6dc; /* husvegg */
+        --tak: #9c6355; /* tak, likt på alle hus */
+        --aksent-a: #9c6355;
+        --aksent-b: #657b8e;
+        --aksent-c: #647c6f;
         --tittel: #9c5f50; /* «gate» i overskriften */
-        --vindu: #e6d2a4; /* opplyst vindu = en oppføring */
-        --vindu-kant: #a89468;
-        --butikk: #6d9694; /* butikkvindu */
+        --vindu: #6b767c; /* ett vindu = én oppføring */
+        --butikk: #2f7d7a; /* butikkvindu */
 
         --kart:
           ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial,
@@ -67,46 +52,31 @@
         :root {
           --papir: #121a20;
           --kort: #1b252c;
-          --grunn: #242b27;
-          --vei: #373d42;
-          --stripe: #8d7c53;
+          --grunn: #232a27;
+          --vei: #363c41;
+          --stripe: #6b6758;
           --kant: #35444a;
           --kant-svak: #263237;
           --blekk: #e6ece9;
           --blekk-svak: #94a4a5;
           --amber: #f0954a;
-          --amber-kant: #f0954a;
           --amber-lys: #4a3614;
           --teal: #54c3b4;
           --rust: #d97a55;
           --rutenett: rgba(170, 205, 210, 0.05);
 
-          --bygg-1: #28343a;
-          --bygg-2: #2f3d43;
-          --bygg-3: #37464d;
-          --bygg-4: #3f5057;
-          --bygg-5: #475a61;
-          --bygg-kant: #4e6168;
           --bygg-tom: #202b2f;
           --bygg-tom-kant: #334247;
           --tom-strek: rgba(255, 255, 255, 0.07);
 
-          --tak-0: #96695c;
-          --vegg-0: #4c463e;
-          --tak-1: #637d72;
-          --vegg-1: #3f4944;
-          --tak-2: #8a6873;
-          --vegg-2: #4a4245;
-          --tak-3: #647b8d;
-          --vegg-3: #414a53;
-          --tak-4: #8d8061;
-          --vegg-4: #4a4740;
-          --tak-5: #77748a;
-          --vegg-5: #45434f;
+          --vegg: #3c4247;
+          --tak: #9c6c5e;
+          --aksent-a: #9c6c5e;
+          --aksent-b: #6a8093;
+          --aksent-c: #6a8478;
           --tittel: #bd8874;
-          --vindu: #cdb884;
-          --vindu-kant: #6b5f42;
-          --butikk: #5e8d8b;
+          --vindu: #9fb0b6;
+          --butikk: #4fb3ae;
         }
       }
 
@@ -174,38 +144,6 @@
         font-size: 16.5px;
         max-width: 52ch;
       }
-      /* en liten takrekke under tittelen */
-      header::after {
-        content: "";
-        display: block;
-        height: 9px;
-        margin-top: 24px;
-        background: linear-gradient(
-          90deg,
-          var(--tak-0) 0 16.6%,
-          var(--tak-1) 16.6% 33.3%,
-          var(--tak-2) 33.3% 50%,
-          var(--tak-3) 50% 66.6%,
-          var(--tak-4) 66.6% 83.3%,
-          var(--tak-5) 83.3% 100%
-        );
-        clip-path: polygon(
-          0 100%,
-          8.3% 0,
-          16.6% 100%,
-          25% 0,
-          33.3% 100%,
-          41.6% 0,
-          50% 100%,
-          58.3% 0,
-          66.6% 100%,
-          75% 0,
-          83.3% 100%,
-          91.6% 0,
-          100% 100%
-        );
-      }
-
       /* ---------- talloppstilling ---------- */
       .tall {
         display: flex;
@@ -219,8 +157,8 @@
         position: relative;
         overflow: hidden;
         background: var(--kort);
-        border: 2px solid var(--kant);
-        border-radius: 10px;
+        border: 1px solid var(--kant);
+        border-radius: 6px;
         padding: 12px 14px 11px 18px;
         line-height: 1.25;
       }
@@ -233,13 +171,13 @@
         width: 5px;
       }
       .tall > div:nth-child(1)::before {
-        background: var(--tak-0);
+        background: var(--aksent-a);
       }
       .tall > div:nth-child(2)::before {
-        background: var(--tak-3);
+        background: var(--aksent-b);
       }
       .tall > div:nth-child(3)::before {
-        background: var(--tak-1);
+        background: var(--aksent-c);
       }
       .tall b {
         display: block;
@@ -277,9 +215,9 @@
         min-width: 0;
         font-family: var(--tekst);
         font-size: 16px;
-        padding: 11px 16px;
-        border: 2px solid var(--kant);
-        border-radius: 999px;
+        padding: 11px 14px;
+        border: 1px solid var(--kant);
+        border-radius: 4px;
         background: var(--kort);
         color: var(--blekk);
       }
@@ -296,11 +234,11 @@
         font-family: var(--kart);
         font-size: 14px;
         font-weight: 550;
-        padding: 11px 18px;
+        padding: 11px 16px;
         cursor: pointer;
         background: var(--kort);
-        border: 2px solid var(--kant);
-        border-radius: 999px;
+        border: 1px solid var(--kant);
+        border-radius: 4px;
         color: var(--blekk);
         transition:
           border-color 0.12s ease,
@@ -326,16 +264,16 @@
         gap: 3px;
         padding: 3px;
         background: var(--kort);
-        border: 2px solid var(--kant);
-        border-radius: 999px;
+        border: 1px solid var(--kant);
+        border-radius: 4px;
       }
       .visningsvalg button {
         font-family: var(--kart);
         font-size: 13.5px;
         font-weight: 550;
-        padding: 8px 18px;
+        padding: 8px 17px;
         border: 0;
-        border-radius: 999px;
+        border-radius: 3px;
         cursor: pointer;
         background: transparent;
         color: var(--blekk-svak);
@@ -386,8 +324,8 @@
       .gate {
         position: relative;
         background: var(--grunn);
-        border: 2px solid var(--kant);
-        border-radius: 12px;
+        border: 1px solid var(--kant);
+        border-radius: 6px;
         padding: 8px 12px 10px;
         box-shadow: 0 18px 30px -28px rgba(0, 0, 0, 0.8);
       }
@@ -431,19 +369,18 @@
 
       /* ---------- tomter ---------- */
       /* ---------- husene ----------
-         Hvert hus er bygd av rene CSS-biter: ::before er taket,
-         ::after er pipa, selve knappen er veggen, og hver oppføring
-         i boka blir et opplyst vindu. */
+         ::before er taket, selve knappen er veggen, og hver oppføring
+         i boka blir et vindu. */
       .tomt,
       .tom {
         position: relative;
-        margin-top: 17px;
+        margin-top: 11px;
         font-family: var(--kart);
         -webkit-appearance: none;
         appearance: none;
-        background: var(--vegg-0);
-        border: 2px solid var(--tak-0);
-        border-radius: 0 0 3px 3px;
+        background: var(--vegg);
+        border: 1px solid var(--tak);
+        border-radius: 0 0 2px 2px;
         color: var(--blekk);
         padding: 8px 10px 7px;
         min-width: 56px;
@@ -453,103 +390,38 @@
         align-items: center;
         gap: 5px;
       }
-      /* taket, med litt takutstikk på hver side */
+      /* taket, med et lite takutstikk på hver side */
       .tomt::before,
       .tom::before {
         content: "";
         position: absolute;
-        left: -6px;
-        right: -6px;
+        left: -4px;
+        right: -4px;
         bottom: 100%;
-        height: 17px;
-        margin-bottom: -2px;
-        background: var(--tak-0);
-        clip-path: polygon(50% 0, 100% 100%, 0 100%);
-      }
-      /* pipa */
-      .tomt::after,
-      .tom::after {
-        content: "";
-        position: absolute;
-        right: 9px;
-        bottom: calc(100% + 7px);
-        width: 6px;
         height: 11px;
-        border-radius: 1px 1px 0 0;
-        background: var(--tak-0);
+        margin-bottom: -1px;
+        background: var(--tak);
+        clip-path: polygon(50% 0, 100% 100%, 0 100%);
       }
       .tomt {
         cursor: pointer;
         transition:
-          transform 0.14s cubic-bezier(0.34, 1.6, 0.64, 1),
-          filter 0.14s ease;
-      }
-
-      /* seks hustyper – farge settes fra husnummeret */
-      .tomt[data-farge="0"] {
-        background: var(--vegg-0);
-        border-color: var(--tak-0);
-      }
-      .tomt[data-farge="0"]::before,
-      .tomt[data-farge="0"]::after {
-        background: var(--tak-0);
-      }
-      .tomt[data-farge="1"] {
-        background: var(--vegg-1);
-        border-color: var(--tak-1);
-      }
-      .tomt[data-farge="1"]::before,
-      .tomt[data-farge="1"]::after {
-        background: var(--tak-1);
-      }
-      .tomt[data-farge="2"] {
-        background: var(--vegg-2);
-        border-color: var(--tak-2);
-      }
-      .tomt[data-farge="2"]::before,
-      .tomt[data-farge="2"]::after {
-        background: var(--tak-2);
-      }
-      .tomt[data-farge="3"] {
-        background: var(--vegg-3);
-        border-color: var(--tak-3);
-      }
-      .tomt[data-farge="3"]::before,
-      .tomt[data-farge="3"]::after {
-        background: var(--tak-3);
-      }
-      .tomt[data-farge="4"] {
-        background: var(--vegg-4);
-        border-color: var(--tak-4);
-      }
-      .tomt[data-farge="4"]::before,
-      .tomt[data-farge="4"]::after {
-        background: var(--tak-4);
-      }
-      .tomt[data-farge="5"] {
-        background: var(--vegg-5);
-        border-color: var(--tak-5);
-      }
-      .tomt[data-farge="5"]::before,
-      .tomt[data-farge="5"]::after {
-        background: var(--tak-5);
+          transform 0.12s ease,
+          box-shadow 0.12s ease;
       }
 
       .tomt:hover {
-        transform: translateY(-3px) rotate(-1deg);
-        filter: saturate(1.15);
-      }
-      .tomt:active {
-        transform: translateY(-1px);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 9px -3px rgba(0, 0, 0, 0.3);
       }
       .tomt:focus-visible {
-        outline: 3px solid var(--amber);
+        outline: 2px solid var(--amber);
         outline-offset: 3px;
       }
       .tomt .nr,
       .tom .nr {
         font-size: 16px;
-        font-weight: 700;
+        font-weight: 650;
         letter-spacing: -0.01em;
         line-height: 1;
       }
@@ -558,34 +430,32 @@
       .tom .prikker {
         display: flex;
         gap: 3px;
-        height: 9px;
+        height: 7px;
         align-items: center;
       }
       .tomt .prikker i {
-        width: 7px;
-        height: 9px;
+        width: 5px;
+        height: 7px;
         display: block;
         border-radius: 1px;
         background: var(--vindu);
-        border: 1px solid var(--vindu-kant);
       }
       .tomt .prikker i.f {
         background: var(--butikk);
-        border-color: var(--butikk);
       }
       .tomt[aria-expanded="true"] {
-        transform: translateY(-3px);
-        outline: 3px solid var(--amber);
+        outline: 2px solid var(--amber);
         outline-offset: 3px;
+        transform: translateY(-2px);
       }
       .tomt.dempet {
         opacity: 0.25;
       }
       .tomt.funn {
-        outline: 3px solid var(--amber);
+        outline: 2px solid var(--amber);
         outline-offset: 3px;
       }
-      /* nummer uten oppføring i boka: tomt hus, ikke trykkbart */
+      /* nummer uten oppføring i boka: skravert og ikke trykkbart */
       .tom {
         background:
           repeating-linear-gradient(
@@ -598,8 +468,7 @@
         color: #f2f5f4;
         cursor: default;
       }
-      .tom::before,
-      .tom::after {
+      .tom::before {
         background: var(--bygg-tom-kant);
       }
 
@@ -626,7 +495,7 @@
         text-transform: uppercase;
         color: var(--blekk);
         background: var(--kort);
-        border: 2px solid var(--tak-3);
+        border: 2px solid var(--aksent-b);
         border-radius: 4px;
         padding: 4px 12px 5px;
         white-space: nowrap;
@@ -649,15 +518,13 @@
       }
       .tegnforklaring i {
         display: block;
-        width: 7px;
-        height: 9px;
+        width: 5px;
+        height: 7px;
         border-radius: 1px;
         background: var(--vindu);
-        border: 1px solid var(--vindu-kant);
       }
       .tegnforklaring i.f {
         background: var(--butikk);
-        border-color: var(--butikk);
       }
       /* ---------- listevisning ---------- */
       .liste {
@@ -665,8 +532,8 @@
         margin: 18px 0 0;
         padding: 0;
         background: var(--kort);
-        border: 2px solid var(--kant);
-        border-radius: 12px;
+        border: 1px solid var(--kant);
+        border-radius: 6px;
         overflow: hidden;
         box-shadow: 0 18px 30px -28px rgba(0, 0, 0, 0.8);
       }
@@ -709,73 +576,31 @@
         background: var(--amber-lys);
         border-left-color: var(--amber);
       }
-      /* husnummeret blir et lite hus, i samme farge som på kartet */
+      /* husnummeret blir et lite hus, likt husene på kartet */
       .lnr {
         position: relative;
         flex: 0 0 auto;
         min-width: 46px;
-        margin-top: 9px;
+        margin-top: 7px;
         font-family: var(--kart);
         font-size: 14px;
-        font-weight: 700;
+        font-weight: 650;
         text-align: center;
         padding: 6px 8px 5px;
-        border: 2px solid var(--tak-0);
-        border-radius: 0 0 3px 3px;
-        background: var(--vegg-0);
+        border: 1px solid var(--tak);
+        border-radius: 0 0 2px 2px;
+        background: var(--vegg);
       }
       .lnr::before {
         content: "";
         position: absolute;
-        left: -4px;
-        right: -4px;
+        left: -3px;
+        right: -3px;
         bottom: 100%;
-        height: 10px;
-        margin-bottom: -2px;
-        background: var(--tak-0);
+        height: 8px;
+        margin-bottom: -1px;
+        background: var(--tak);
         clip-path: polygon(50% 0, 100% 100%, 0 100%);
-      }
-      .lnr[data-farge="0"] {
-        background: var(--vegg-0);
-        border-color: var(--tak-0);
-      }
-      .lnr[data-farge="0"]::before {
-        background: var(--tak-0);
-      }
-      .lnr[data-farge="1"] {
-        background: var(--vegg-1);
-        border-color: var(--tak-1);
-      }
-      .lnr[data-farge="1"]::before {
-        background: var(--tak-1);
-      }
-      .lnr[data-farge="2"] {
-        background: var(--vegg-2);
-        border-color: var(--tak-2);
-      }
-      .lnr[data-farge="2"]::before {
-        background: var(--tak-2);
-      }
-      .lnr[data-farge="3"] {
-        background: var(--vegg-3);
-        border-color: var(--tak-3);
-      }
-      .lnr[data-farge="3"]::before {
-        background: var(--tak-3);
-      }
-      .lnr[data-farge="4"] {
-        background: var(--vegg-4);
-        border-color: var(--tak-4);
-      }
-      .lnr[data-farge="4"]::before {
-        background: var(--tak-4);
-      }
-      .lnr[data-farge="5"] {
-        background: var(--vegg-5);
-        border-color: var(--tak-5);
-      }
-      .lnr[data-farge="5"]::before {
-        background: var(--tak-5);
       }
       .lnavn {
         flex: 1 1 auto;
@@ -797,8 +622,8 @@
       }
       .lant i {
         display: block;
-        width: 7px;
-        height: 9px;
+        width: 5px;
+        height: 7px;
         border-radius: 1px;
         background: var(--butikk);
       }
@@ -1035,7 +860,7 @@
       <ol class="liste" id="liste"></ol>
 
       <div class="tegnforklaring skjult" id="tegnforklaring">
-        <span><i></i> ett opplyst vindu = én oppføring i boka</span>
+        <span><i></i> ett vindu = én oppføring i boka</span>
         <span><i class="f"></i> forretning</span>
       </div>
 
@@ -3076,16 +2901,6 @@
         0,
       );
 
-      /* Hustype per hus. Fordeles etter plass i tallrekka, ikke etter
-         husnummeret selv – partall og oddetall ville ellers havnet på
-         hver sin halvdel av paletten, og gata ble varm på én side og
-         kald på den andre. */
-      const FARGE = new Map(
-        [...HUS]
-          .sort((a, b) => a.n - b.n || (a.b || "").localeCompare(b.b || ""))
-          .map((h, i) => [h.label, i % 6]),
-      );
-
       /* ---- bygg gata ---- */
       const gate = document.getElementById("gate");
       const husEtterNr = new Map(HUS.map((h) => [h.label, h]));
@@ -3141,8 +2956,6 @@
         b.className = "tomt";
         b.setAttribute("aria-expanded", "false");
         b.dataset.hus = h.label;
-        /* hvilken av de seks hustypene huset får (se .tomt[data-farge]) */
-        b.dataset.farge = FARGE.get(h.label);
         const prikker = h.p
           .map((x) => '<i class="' + (erFirma(x) ? "f" : "") + '"></i>')
           .join("");
@@ -3201,9 +3014,7 @@
           const navn = h.p.map((x) => x.navn).join(", ");
           const firma = h.p.filter(erFirma).length;
           rad.innerHTML =
-            '<span class="lnr" data-farge="' +
-            FARGE.get(h.label) +
-            '">' +
+            '<span class="lnr">' +
             esc(h.label) +
             '</span><span class="lnavn">' +
             esc(navn) +
