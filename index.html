@@ -11,11 +11,11 @@
          byttes ut under prefers-color-scheme.
          ================================================================ */
       :root {
-        --papir: #fdf6e6; /* sidebakgrunn */
-        --kort: #fffdf6; /* kort og felter */
-        --grunn: #cde8c8; /* gresset langs gata */
-        --vei: #e9e4d8; /* asfalt */
-        --stripe: #f2c14e; /* gul midtstripe */
+        --papir: #f6f2e7; /* sidebakgrunn */
+        --kort: #fcfaf3; /* kort og felter */
+        --grunn: #dde3d7; /* gresset langs gata */
+        --vei: #eae6db; /* asfalt */
+        --stripe: #c4ad7c; /* midtstripe */
         --kant: #cec9b9; /* trykkstrek */
         --kant-svak: #e0dbcc;
         --blekk: #14232a;
@@ -39,21 +39,22 @@
         --tom-strek: rgba(255, 255, 255, 0.16);
 
         /* seks hustyper, fordelt etter husnummer */
-        --tak-0: #bf452e;
-        --vegg-0: #f6d7ae;
-        --tak-1: #2f8f6f;
-        --vegg-1: #cfe8d5;
-        --tak-2: #c2415f;
-        --vegg-2: #f7d3d8;
-        --tak-3: #3a74ac;
-        --vegg-3: #d3e4f4;
-        --tak-4: #c9902a;
-        --vegg-4: #f6e7b8;
-        --tak-5: #7259ad;
-        --vegg-5: #e0d9f1;
-        --vindu: #ffd34d; /* opplyst vindu = en oppføring */
-        --vindu-kant: #9a7412;
-        --butikk: #19a2a2; /* butikkvindu */
+        --tak-0: #a4685a;
+        --vegg-0: #ece4d6;
+        --tak-1: #6d8375;
+        --vegg-1: #e3e7df;
+        --tak-2: #98707c;
+        --vegg-2: #eae2e2;
+        --tak-3: #6b8296;
+        --vegg-3: #e2e7ec;
+        --tak-4: #a08d64;
+        --vegg-4: #ece7d8;
+        --tak-5: #7d7a8e;
+        --vegg-5: #e5e3e9;
+        --tittel: #9c5f50; /* «gate» i overskriften */
+        --vindu: #e6d2a4; /* opplyst vindu = en oppføring */
+        --vindu-kant: #a89468;
+        --butikk: #6d9694; /* butikkvindu */
 
         --kart:
           ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial,
@@ -66,9 +67,9 @@
         :root {
           --papir: #121a20;
           --kort: #1b252c;
-          --grunn: #1e3328;
-          --vei: #3a4249;
-          --stripe: #c9a23d;
+          --grunn: #242b27;
+          --vei: #373d42;
+          --stripe: #8d7c53;
           --kant: #35444a;
           --kant-svak: #263237;
           --blekk: #e6ece9;
@@ -90,21 +91,22 @@
           --bygg-tom-kant: #334247;
           --tom-strek: rgba(255, 255, 255, 0.07);
 
-          --tak-0: #c04a33;
-          --vegg-0: #6b5335;
-          --tak-1: #2b8065;
-          --vegg-1: #33564a;
-          --tak-2: #ad3a55;
-          --vegg-2: #6a3f4a;
-          --tak-3: #35679a;
-          --vegg-3: #37506b;
-          --tak-4: #b07f24;
-          --vegg-4: #6a5a30;
-          --tak-5: #64509b;
-          --vegg-5: #4c4468;
-          --vindu: #ffcf45;
-          --vindu-kant: #6d5210;
-          --butikk: #2ec2c2;
+          --tak-0: #96695c;
+          --vegg-0: #4c463e;
+          --tak-1: #637d72;
+          --vegg-1: #3f4944;
+          --tak-2: #8a6873;
+          --vegg-2: #4a4245;
+          --tak-3: #647b8d;
+          --vegg-3: #414a53;
+          --tak-4: #8d8061;
+          --vegg-4: #4a4740;
+          --tak-5: #77748a;
+          --vegg-5: #45434f;
+          --tittel: #bd8874;
+          --vindu: #cdb884;
+          --vindu-kant: #6b5f42;
+          --butikk: #5e8d8b;
         }
       }
 
@@ -156,7 +158,7 @@
         line-height: 0.95;
       }
       h1 span {
-        color: var(--tak-0);
+        color: var(--tittel);
       }
       .undertittel {
         font-family: var(--kart);
@@ -345,8 +347,8 @@
         color: var(--blekk);
       }
       .visningsvalg button[aria-pressed="true"] {
-        background: var(--tak-0);
-        color: #fff;
+        background: var(--blekk);
+        color: var(--papir);
       }
       .visningsvalg button:focus-visible {
         outline: 2px solid var(--amber);
@@ -622,11 +624,10 @@
         font-weight: 700;
         letter-spacing: 0.07em;
         text-transform: uppercase;
-        color: #fff;
-        background: var(--tak-3);
+        color: var(--blekk);
+        background: var(--kort);
         border: 2px solid var(--tak-3);
         border-radius: 4px;
-        box-shadow: inset 0 0 0 2px #fff;
         padding: 4px 12px 5px;
         white-space: nowrap;
       }
