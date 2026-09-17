@@ -844,7 +844,7 @@
       <header>
         <h1>Tors <span>gate</span></h1>
         <p class="undertittel">Kristiansand S &nbsp;·&nbsp; 1964</p>
-        <p class="ingress">
+        <p class="ingress skjult">
           Trykk på et hus for å se hvem som sto oppført der.
         </p>
         <div class="tall">
@@ -864,10 +864,10 @@
             aria-label="Søk etter navn"
           />
           <div class="visningsvalg" role="group" aria-label="Visning">
-            <button type="button" id="v-kart" aria-pressed="true">Kart</button>
-            <button type="button" id="v-liste" aria-pressed="false">
+            <button type="button" id="v-liste" aria-pressed="true">
               Liste
             </button>
+            <button type="button" id="v-kart" aria-pressed="false">Kart</button>
           </div>
         </div>
         <div class="understrek">
@@ -876,16 +876,16 @@
         </div>
       </div>
 
-      <p class="retning">
+      <p class="retning skjult">
         Gata leses nedover, fra vest (øverst) mot øst (nederst).
       </p>
-      <div class="kompass">
+      <div class="kompass skjult">
         <span>← mot Marviksveien</span><span>mot Agder allé →</span>
       </div>
-      <div class="gate" id="gate"></div>
-      <ol class="liste skjult" id="liste"></ol>
+      <div class="gate skjult" id="gate"></div>
+      <ol class="liste" id="liste"></ol>
 
-      <div class="tegnforklaring" id="tegnforklaring">
+      <div class="tegnforklaring skjult" id="tegnforklaring">
         <span><i></i> oppføring i boka</span>
         <span><i class="f"></i> forretning</span>
         <span><i class="skala"></i> flere oppføringer, mørkere tomt</span>
@@ -3068,13 +3068,14 @@
 
       /* ---- kart eller liste ---- */
       const kartdeler = [
+        document.querySelector(".ingress"),
         document.querySelector(".retning"),
         document.querySelector(".kompass"),
         document.getElementById("tegnforklaring"),
       ];
       const knappKart = document.getElementById("v-kart");
       const knappListe = document.getElementById("v-liste");
-      let visning = "kart";
+      let visning = "liste";
 
       /* beholderen som er synlig nå – søk og «apne alle» gjelder bare den */
       const aktiv = () => (visning === "kart" ? gate : liste);
