@@ -14,8 +14,8 @@
         --papir: #f5f2ea; /* sidebakgrunn */
         --kort: #fcfbf6; /* kort og felter */
         --grunn: #dbdfd6; /* bakken langs gata */
-        --vei: #ebe8df; /* asfalt */
-        --stripe: #c1baa6; /* midtstripe */
+        --vei: #969b9c; /* asfalt */
+        --veibredde: 44px;
         --kant: #cec9b9; /* trykkstrek */
         --kant-svak: #e0dbcc;
         --blekk: #14232a;
@@ -53,8 +53,7 @@
           --papir: #121a20;
           --kort: #1b252c;
           --grunn: #232a27;
-          --vei: #363c41;
-          --stripe: #6b6758;
+          --vei: #4d5458;
           --kant: #35444a;
           --kant-svak: #263237;
           --blekk: #e6ece9;
@@ -323,11 +322,29 @@
       /* ---------- kartet ---------- */
       .gate {
         position: relative;
+        isolation: isolate;
         background: var(--grunn);
         border: 1px solid var(--kant);
         border-radius: 6px;
         padding: 8px 12px 10px;
         box-shadow: 0 18px 30px -28px rgba(0, 0, 0, 0.8);
+      }
+      /* kjørebanen tegnes i étt stykke bak radene, slik at den ikke
+         brytes opp i stumper mellom hver sidegate */
+      .gate::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        z-index: 0;
+        width: var(--veibredde);
+        transform: translateX(-50%);
+        background: var(--vei);
+      }
+      .gate > * {
+        position: relative;
+        z-index: 1;
       }
       .rad {
         display: flex;
@@ -345,26 +362,14 @@
       }
       .side.sor {
         justify-content: flex-end;
+        padding-right: 9px;
       }
       .side.nord {
         justify-content: flex-start;
+        padding-left: 9px;
       }
       .asfalt {
-        flex: 0 0 58px;
-        background: var(--vei);
-        position: relative;
-        border-left: 1px solid var(--kant-svak);
-        border-right: 1px solid var(--kant-svak);
-      }
-      .asfalt::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 0;
-        border-left: 4px dashed var(--stripe);
-        transform: translateX(-1px);
+        flex: 0 0 var(--veibredde);
       }
 
       /* ---------- tomter ---------- */
@@ -395,10 +400,10 @@
       .tom::before {
         content: "";
         position: absolute;
-        left: -4px;
-        right: -4px;
+        left: 0;
+        right: 0;
         bottom: 100%;
-        height: 11px;
+        height: 12px;
         margin-bottom: -1px;
         background: var(--tak);
         clip-path: polygon(50% 0, 100% 100%, 0 100%);
@@ -594,8 +599,8 @@
       .lnr::before {
         content: "";
         position: absolute;
-        left: -3px;
-        right: -3px;
+        left: 0;
+        right: 0;
         bottom: 100%;
         height: 8px;
         margin-bottom: -1px;
@@ -772,8 +777,13 @@
 
       /* ---------- små skjermer ---------- */
       @media (max-width: 460px) {
-        .asfalt {
-          flex: 0 0 34px;
+        :root {
+          --veibredde: 26px;
+        }
+        /* litt mindre sperring, så de to margnotatene får plass side om side */
+        .kompass {
+          letter-spacing: 0.06em;
+          gap: 8px;
         }
         .tomt,
         .tom {
