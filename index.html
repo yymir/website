@@ -78,6 +78,8 @@
       }
       html {
         -webkit-text-size-adjust: 100%;
+        /* så tastaturfokus ikke havner bak den klebrige verktøylinja */
+        scroll-padding-top: 120px;
       }
       body {
         margin: 0;
@@ -257,6 +259,46 @@
       button.knapp:focus-visible {
         outline: 2px solid var(--amber);
         outline-offset: 2px;
+      }
+      .understrek {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      /* segmentvelger for kart / liste */
+      .visningsvalg {
+        display: inline-flex;
+        gap: 3px;
+        padding: 3px;
+        background: var(--kort);
+        border: 1px solid var(--kant);
+        border-radius: 3px;
+      }
+      .visningsvalg button {
+        font-family: var(--kart);
+        font-size: 13.5px;
+        font-weight: 550;
+        padding: 8px 17px;
+        border: 0;
+        border-radius: 2px;
+        cursor: pointer;
+        background: transparent;
+        color: var(--blekk-svak);
+        transition:
+          background 0.12s ease,
+          color 0.12s ease;
+      }
+      .visningsvalg button:hover {
+        color: var(--blekk);
+      }
+      .visningsvalg button[aria-pressed="true"] {
+        background: var(--blekk);
+        color: var(--papir);
+      }
+      .visningsvalg button:focus-visible {
+        outline: 2px solid var(--amber);
+        outline-offset: 1px;
       }
       .treff {
         font-family: var(--kart);
@@ -508,6 +550,120 @@
         );
       }
 
+      /* ---------- listevisning ---------- */
+      .liste {
+        list-style: none;
+        margin: 18px 0 0;
+        padding: 0;
+        background: var(--kort);
+        border: 1px solid var(--kant);
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 18px 30px -28px rgba(0, 0, 0, 0.8);
+      }
+      .liste > li + li {
+        border-top: 1px solid var(--kant-svak);
+      }
+      .listerad {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 11px 16px 11px 13px;
+        font: inherit;
+        text-align: left;
+        color: var(--blekk);
+        background: transparent;
+        border: 0;
+        border-left: 3px solid transparent;
+        cursor: pointer;
+        transition:
+          background 0.12s ease,
+          border-color 0.12s ease;
+      }
+      .listerad:hover {
+        background: var(--papir);
+        border-left-color: var(--amber);
+      }
+      .listerad:focus-visible {
+        outline: 2px solid var(--amber);
+        outline-offset: -2px;
+      }
+      .listerad[aria-expanded="true"] {
+        background: var(--papir);
+        border-left-color: var(--amber);
+      }
+      .listerad.dempet {
+        opacity: 0.3;
+      }
+      .listerad.funn {
+        background: var(--amber-lys);
+        border-left-color: var(--amber);
+      }
+      /* husnummeret får samme skravering som tomta på kartet */
+      .lnr {
+        flex: 0 0 auto;
+        min-width: 48px;
+        font-family: var(--kart);
+        font-size: 15px;
+        font-weight: 650;
+        text-align: center;
+        padding: 7px 8px 6px;
+        border: 1px solid var(--bygg-kant);
+        border-radius: 2px;
+        background: var(--bygg-3);
+      }
+      .lnr[data-ant="1"] {
+        background: var(--bygg-1);
+      }
+      .lnr[data-ant="2"] {
+        background: var(--bygg-2);
+      }
+      .lnr[data-ant="3"] {
+        background: var(--bygg-3);
+      }
+      .lnr[data-ant="4"] {
+        background: var(--bygg-4);
+      }
+      .lnr[data-ant="5"] {
+        background: var(--bygg-5);
+      }
+      .lnavn {
+        flex: 1 1 auto;
+        min-width: 0;
+        font-size: 15.5px;
+        color: var(--blekk-svak);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .lant {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-family: var(--kart);
+        font-size: 12px;
+        color: var(--blekk-svak);
+      }
+      .lant i {
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-radius: 1px;
+        background: var(--teal);
+      }
+      /* kortet ligger flatt inni lista */
+      .liste .kort {
+        margin: 0;
+        border: 0;
+        border-top: 1px solid var(--kant-svak);
+        border-left: 3px solid var(--amber);
+        border-radius: 0;
+        box-shadow: none;
+        background: var(--papir);
+      }
+
       /* ---------- detaljkort ---------- */
       .kort {
         background: var(--kort);
@@ -707,9 +863,17 @@
             autocomplete="off"
             aria-label="Søk etter navn"
           />
-          <button class="knapp" id="alle" type="button">Åpne alle</button>
+          <div class="visningsvalg" role="group" aria-label="Visning">
+            <button type="button" id="v-kart" aria-pressed="true">Kart</button>
+            <button type="button" id="v-liste" aria-pressed="false">
+              Liste
+            </button>
+          </div>
         </div>
-        <p class="treff" id="treff"></p>
+        <div class="understrek">
+          <button class="knapp" id="alle" type="button">Åpne alle</button>
+          <p class="treff" id="treff"></p>
+        </div>
       </div>
 
       <p class="retning">
@@ -719,8 +883,9 @@
         <span>← mot Marviksveien</span><span>mot Agder allé →</span>
       </div>
       <div class="gate" id="gate"></div>
+      <ol class="liste skjult" id="liste"></ol>
 
-      <div class="tegnforklaring">
+      <div class="tegnforklaring" id="tegnforklaring">
         <span><i></i> oppføring i boka</span>
         <span><i class="f"></i> forretning</span>
         <span><i class="skala"></i> flere oppføringer, mørkere tomt</span>
@@ -2860,6 +3025,74 @@
         glemt.forEach((h) => tegnHus(h.label, h.n % 2 ? nord : sor, holder));
       }
 
+      /* ---- bygg lista ----
+         Samme hus som på kartet, men sortert etter nummer: 1A, 2, 3, 4, 4A …
+         Kartet viser gata slik den ligger; lista leses rett igjennom. */
+      const liste = document.getElementById("liste");
+
+      [...HUS]
+        .sort((a, b) => a.n - b.n || (a.b || "").localeCompare(b.b || ""))
+        .forEach((h) => {
+          const li = document.createElement("li");
+          const rad = document.createElement("button");
+          rad.type = "button";
+          rad.className = "listerad";
+          rad.setAttribute("aria-expanded", "false");
+          rad.dataset.hus = h.label;
+
+          const navn = h.p.map((x) => x.navn).join(", ");
+          const firma = h.p.filter(erFirma).length;
+          rad.innerHTML =
+            '<span class="lnr" data-ant="' +
+            Math.min(h.p.length, 5) +
+            '">' +
+            esc(h.label) +
+            '</span><span class="lnavn">' +
+            esc(navn) +
+            '</span><span class="lant">' +
+            (firma ? "<i></i>" : "") +
+            h.p.length +
+            "</span>";
+          rad.title =
+            "Tors gate " +
+            h.label +
+            " – " +
+            h.p.length +
+            (h.p.length === 1 ? " oppføring" : " oppføringer");
+
+          const holder = document.createElement("div");
+          rad.addEventListener("click", () => veksle(h, rad, holder));
+          li.append(rad, holder);
+          liste.appendChild(li);
+        });
+
+      /* ---- kart eller liste ---- */
+      const kartdeler = [
+        document.querySelector(".retning"),
+        document.querySelector(".kompass"),
+        document.getElementById("tegnforklaring"),
+      ];
+      const knappKart = document.getElementById("v-kart");
+      const knappListe = document.getElementById("v-liste");
+      let visning = "kart";
+
+      /* beholderen som er synlig nå – søk og «apne alle» gjelder bare den */
+      const aktiv = () => (visning === "kart" ? gate : liste);
+
+      function settVisning(v) {
+        visning = v;
+        const kart = v === "kart";
+        gate.classList.toggle("skjult", !kart);
+        liste.classList.toggle("skjult", kart);
+        kartdeler.forEach((el) => el.classList.toggle("skjult", !kart));
+        knappKart.setAttribute("aria-pressed", String(kart));
+        knappListe.setAttribute("aria-pressed", String(!kart));
+        sok.dispatchEvent(new Event("input"));
+        oppdaterAlleKnapp();
+      }
+      knappKart.addEventListener("click", () => settVisning("kart"));
+      knappListe.addEventListener("click", () => settVisning("liste"));
+
       /* ---- kleb verktøylinja ---- */
       const verktoy = document.querySelector(".verktoy");
       const merkFest = () =>
@@ -2914,6 +3147,7 @@
         if (apen) {
           knapp.setAttribute("aria-expanded", "false");
           fjern(h.label, holder);
+          oppdaterAlleKnapp();
           return;
         }
         knapp.setAttribute("aria-expanded", "true");
@@ -2921,6 +3155,7 @@
         d.dataset.kort = h.label;
         d.innerHTML = kortHTML(h);
         holder.appendChild(d);
+        oppdaterAlleKnapp();
       }
       function fjern(label, holder) {
         const el = holder.querySelector('[data-kort="' + label + '"]');
@@ -2928,14 +3163,25 @@
       }
 
       /* ---- åpne / lukk alle ---- */
-      let alleApne = false;
-      document.getElementById("alle").addEventListener("click", (e) => {
-        alleApne = !alleApne;
-        document.querySelectorAll(".tomt").forEach((b) => {
-          const na = b.getAttribute("aria-expanded") === "true";
-          if (na !== alleApne) b.click();
+      const knappAlle = document.getElementById("alle");
+
+      /* teksten skal speile det som faktisk er åpent i visningen du ser på */
+      function oppdaterAlleKnapp() {
+        const b = [...aktiv().querySelectorAll("[data-hus]")];
+        const apne = b.filter(
+          (x) => x.getAttribute("aria-expanded") === "true",
+        ).length;
+        knappAlle.textContent =
+          apne === b.length && b.length ? "Lukk alle" : "Åpne alle";
+      }
+
+      knappAlle.addEventListener("click", () => {
+        const b = [...aktiv().querySelectorAll("[data-hus]")];
+        const apne = knappAlle.textContent === "Åpne alle";
+        b.forEach((x) => {
+          if ((x.getAttribute("aria-expanded") === "true") !== apne) x.click();
         });
-        e.target.textContent = alleApne ? "Lukk alle" : "Åpne alle";
+        oppdaterAlleKnapp();
       });
 
       /* ---- søk ---- */
@@ -2943,7 +3189,7 @@
         treff = document.getElementById("treff");
       sok.addEventListener("input", () => {
         const q = sok.value.trim().toLowerCase();
-        const knapper = document.querySelectorAll(".tomt");
+        const knapper = aktiv().querySelectorAll("[data-hus]");
         if (!q) {
           knapper.forEach((b) => b.classList.remove("dempet", "funn"));
           treff.textContent = "";
