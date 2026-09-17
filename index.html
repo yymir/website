@@ -5,25 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tors gate 1964 – Kristiansand S</title>
     <style>
+      /* ================================================================
+         Kartblad 1964 – et trykt kartblad på papir.
+         Lys og mørk drakt deler de samme variablene; bare verdiene
+         byttes ut under prefers-color-scheme.
+         ================================================================ */
       :root {
-        --grunn: #ccd3ce; /* kartbakgrunn */
-        --bygg: #aeb7b2; /* bygningsflate */
+        --papir: #f2eee3; /* sidebakgrunn, trykkpapir */
+        --kort: #fbf9f3; /* kort og felter */
+        --grunn: #d9ded4; /* kartflate */
+        --vei: #fcfbf7; /* asfalt */
+        --kant: #cec9b9; /* trykkstrek */
+        --kant-svak: #e0dbcc;
+        --blekk: #14232a;
+        --blekk-svak: #5e6d70;
+        --amber: #a35c08; /* valgt hus, rammer og fokus */
+        --amber-lys: #f4ddab;
+        --teal: #0f5f5c; /* forretning */
+        --rust: #9c4221; /* tredje aksent */
+        --rutenett: rgba(20, 35, 42, 0.055);
+        --midtstripe: #c6c0ae;
+
+        /* bygningsflater – mørkere jo flere oppføringer huset har */
+        --bygg-1: #c9d0c8;
+        --bygg-2: #bac3ba;
+        --bygg-3: #aab5ab;
+        --bygg-4: #9aa79c;
+        --bygg-5: #8a988d;
         --bygg-kant: #8b9691;
         --bygg-tom: #616e6a; /* tomt uten oppføring i boka */
         --bygg-tom-kant: #4d5956;
-        --vei: #ffffff;
-        --blekk: #16242b;
-        --blekk-svak: #5d6b6e;
-        --amber: #c07d12; /* valgt hus */
-        --amber-lys: #f0d9a8;
-        --teal: #125d5c; /* forretning */
-        --kort: #fbfaf7;
-        --kant: #c2cac5;
+        --tom-strek: rgba(255, 255, 255, 0.16);
+
         --kart:
           ui-sans-serif, -apple-system, "Segoe UI", "Helvetica Neue", Arial,
           sans-serif;
         --tekst: Georgia, "Iowan Old Style", "Times New Roman", serif;
+        --kode: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
       }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --papir: #101719;
+          --kort: #182125;
+          --grunn: #1b2429;
+          --vei: #323f45;
+          --kant: #35444a;
+          --kant-svak: #263237;
+          --blekk: #e6ece9;
+          --blekk-svak: #94a4a5;
+          --amber: #e0a141;
+          --amber-lys: #4a3614;
+          --teal: #54c3b4;
+          --rust: #d97a55;
+          --rutenett: rgba(170, 205, 210, 0.05);
+          --midtstripe: #61757e;
+
+          --bygg-1: #28343a;
+          --bygg-2: #2f3d43;
+          --bygg-3: #37464d;
+          --bygg-4: #3f5057;
+          --bygg-5: #475a61;
+          --bygg-kant: #4e6168;
+          --bygg-tom: #202b2f;
+          --bygg-tom-kant: #334247;
+          --tom-strek: rgba(255, 255, 255, 0.07);
+        }
+      }
+
       * {
         box-sizing: border-box;
       }
@@ -32,66 +81,139 @@
       }
       body {
         margin: 0;
-        background: var(--grunn);
+        background: var(--papir);
         color: var(--blekk);
         font-family: var(--tekst);
         line-height: 1.6;
       }
+      /* svakt rutenett, som på et kartblad */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image:
+          linear-gradient(var(--rutenett) 1px, transparent 1px),
+          linear-gradient(90deg, var(--rutenett) 1px, transparent 1px);
+        background-size: 30px 30px;
+      }
       .ramme {
-        max-width: 660px;
+        position: relative;
+        z-index: 1;
+        max-width: 680px;
         margin: 0 auto;
-        padding: 0 14px 64px;
+        padding: 0 16px 72px;
       }
 
-      /* ---------- masthead ---------- */
+      /* ---------- tittelfelt ---------- */
       header {
-        padding: 38px 0 20px;
+        padding: 44px 0 4px;
       }
       h1 {
         font-family: var(--kart);
-        font-weight: 600;
-        font-size: clamp(34px, 10vw, 52px);
-        letter-spacing: -0.02em;
+        font-weight: 650;
+        font-size: clamp(38px, 11vw, 58px);
+        letter-spacing: -0.035em;
         margin: 0;
-        line-height: 1;
+        line-height: 0.95;
+      }
+      h1 span {
+        color: var(--teal);
       }
       .undertittel {
         font-family: var(--kart);
-        font-size: 14px;
-        letter-spacing: 0.06em;
+        font-size: 12.5px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
         color: var(--blekk-svak);
-        margin: 10px 0 0;
+        margin: 14px 0 0;
       }
       .ingress {
-        margin: 18px 0 0;
+        margin: 16px 0 0;
         font-size: 16.5px;
         max-width: 52ch;
       }
+      header::after {
+        content: "";
+        display: block;
+        height: 5px;
+        margin-top: 26px;
+        border-radius: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--amber) 0 24%,
+          var(--rust) 24% 42%,
+          var(--teal) 42% 60%,
+          var(--kant) 60% 100%
+        );
+      }
+
+      /* ---------- talloppstilling ---------- */
       .tall {
         display: flex;
-        gap: 26px;
+        flex-wrap: wrap;
+        gap: 10px;
         margin: 22px 0 0;
         font-family: var(--kart);
       }
-      .tall div {
+      .tall > div {
+        flex: 1 1 130px;
+        position: relative;
+        overflow: hidden;
+        background: var(--kort);
+        border: 1px solid var(--kant);
+        border-radius: 3px;
+        padding: 12px 14px 11px 18px;
         line-height: 1.25;
+      }
+      .tall > div::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 5px;
+      }
+      .tall > div:nth-child(1)::before {
+        background: var(--amber);
+      }
+      .tall > div:nth-child(2)::before {
+        background: var(--rust);
+      }
+      .tall > div:nth-child(3)::before {
+        background: var(--teal);
       }
       .tall b {
         display: block;
-        font-size: 26px;
-        font-weight: 600;
+        font-size: 27px;
+        font-weight: 650;
+        letter-spacing: -0.02em;
       }
       .tall span {
-        font-size: 12.5px;
+        font-size: 12px;
         color: var(--blekk-svak);
-        letter-spacing: 0.04em;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
       }
 
       /* ---------- søk ---------- */
+      .verktoy {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: var(--papir);
+        padding: 18px 0 2px;
+        margin-bottom: 4px;
+      }
+      /* skyggen skal bare vises når linja faktisk har festet seg i toppen */
+      .verktoy.festet {
+        box-shadow: 0 10px 12px -12px rgba(0, 0, 0, 0.45);
+      }
       .sokrad {
         display: flex;
         gap: 8px;
-        margin: 24px 0 6px;
         flex-wrap: wrap;
       }
       input[type="search"] {
@@ -100,55 +222,78 @@
         font-family: var(--tekst);
         font-size: 16px;
         padding: 11px 14px;
-        border: 1px solid var(--bygg-kant);
-        border-radius: 2px;
+        border: 1px solid var(--kant);
+        border-radius: 3px;
         background: var(--kort);
         color: var(--blekk);
+      }
+      input[type="search"]::placeholder {
+        color: var(--blekk-svak);
+        opacity: 0.8;
       }
       input[type="search"]:focus {
         outline: 2px solid var(--amber);
         outline-offset: 1px;
+        border-color: var(--amber);
       }
       button.knapp {
         font-family: var(--kart);
         font-size: 14px;
-        padding: 11px 14px;
+        font-weight: 550;
+        padding: 11px 16px;
         cursor: pointer;
         background: var(--kort);
-        border: 1px solid var(--bygg-kant);
-        border-radius: 2px;
+        border: 1px solid var(--kant);
+        border-radius: 3px;
         color: var(--blekk);
+        transition:
+          border-color 0.12s ease,
+          color 0.12s ease;
       }
       button.knapp:hover {
-        background: #fff;
+        border-color: var(--amber);
+        color: var(--amber);
+      }
+      button.knapp:focus-visible {
+        outline: 2px solid var(--amber);
+        outline-offset: 2px;
       }
       .treff {
         font-family: var(--kart);
         font-size: 13.5px;
         color: var(--blekk-svak);
         min-height: 22px;
-        margin: 0 0 6px;
+        margin: 6px 0 0;
       }
 
-      /* ---------- gata ---------- */
-      .gate {
-        position: relative;
-        background: var(--grunn);
-      }
+      /* ---------- margnotater over kartet ---------- */
       .retning {
         font-family: var(--kart);
         font-size: 12.5px;
         color: var(--blekk-svak);
-        margin: 0 0 6px;
+        margin: 18px 0 8px;
       }
       .kompass {
         font-family: var(--kart);
-        font-size: 12px;
+        font-size: 11.5px;
+        font-weight: 600;
         letter-spacing: 0.14em;
+        text-transform: uppercase;
         color: var(--blekk-svak);
         display: flex;
         justify-content: space-between;
+        gap: 12px;
         padding: 0 2px 8px;
+      }
+
+      /* ---------- kartet ---------- */
+      .gate {
+        position: relative;
+        background: var(--grunn);
+        border: 1px solid var(--kant);
+        border-radius: 4px;
+        padding: 8px 12px 10px;
+        box-shadow: 0 18px 30px -28px rgba(0, 0, 0, 0.8);
       }
       .rad {
         display: flex;
@@ -173,8 +318,8 @@
         flex: 0 0 58px;
         background: var(--vei);
         position: relative;
-        border-left: 1px solid #e3e7e4;
-        border-right: 1px solid #e3e7e4;
+        border-left: 1px solid var(--kant-svak);
+        border-right: 1px solid var(--kant-svak);
       }
       .asfalt::after {
         content: "";
@@ -183,33 +328,57 @@
         top: 0;
         bottom: 0;
         width: 0;
-        border-left: 2px dashed #d3dad6;
+        border-left: 2px dashed var(--midtstripe);
         transform: translateX(-1px);
       }
 
+      /* ---------- tomter ---------- */
       .tomt,
       .tom {
         font-family: var(--kart);
-        cursor: pointer;
         -webkit-appearance: none;
         appearance: none;
-        background: var(--bygg);
+        background: var(--bygg-3);
         border: 1px solid var(--bygg-kant);
-        border-radius: 1px;
+        border-radius: 2px;
         color: var(--blekk);
         padding: 9px 11px 8px;
-        min-width: 52px;
+        min-width: 54px;
         text-align: center;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 3px;
+        gap: 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.13);
+      }
+      .tomt {
+        cursor: pointer;
         transition:
           background 0.12s ease,
-          box-shadow 0.12s ease;
+          transform 0.12s ease,
+          box-shadow 0.12s ease,
+          border-color 0.12s ease;
+      }
+      /* flere oppføringer = mørkere bygningsflate */
+      .tomt[data-ant="1"] {
+        background: var(--bygg-1);
+      }
+      .tomt[data-ant="2"] {
+        background: var(--bygg-2);
+      }
+      .tomt[data-ant="3"] {
+        background: var(--bygg-3);
+      }
+      .tomt[data-ant="4"] {
+        background: var(--bygg-4);
+      }
+      .tomt[data-ant="5"] {
+        background: var(--bygg-5);
       }
       .tomt:hover {
-        background: #c2cac5;
+        border-color: var(--amber);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.28);
       }
       .tomt:focus-visible {
         outline: 2px solid var(--amber);
@@ -218,93 +387,167 @@
       .tomt .nr,
       .tom .nr {
         font-size: 17px;
-        font-weight: 600;
+        font-weight: 650;
         letter-spacing: -0.01em;
         line-height: 1;
       }
       .tomt .prikker,
       .tom .prikker {
         display: flex;
-        gap: 2.5px;
-        height: 5px;
+        gap: 3px;
+        height: 6px;
         align-items: center;
       }
       .tomt .prikker i {
-        width: 4px;
-        height: 4px;
+        width: 5px;
+        height: 5px;
         border-radius: 50%;
         background: var(--blekk);
-        opacity: 0.55;
+        opacity: 0.5;
         display: block;
       }
       .tomt .prikker i.f {
         background: var(--teal);
-        opacity: 0.95;
-        border-radius: 0;
+        opacity: 1;
+        border-radius: 1px;
       }
       .tomt[aria-expanded="true"] {
         background: var(--amber-lys);
         border-color: var(--amber);
         box-shadow: inset 0 0 0 1px var(--amber);
+        transform: none;
       }
       .tomt.dempet {
-        opacity: 0.3;
-      }
-      .tom {
-        background: var(--bygg-tom);
-        border-color: var(--bygg-tom-kant);
-        color: #f2f5f4;
-        cursor: default;
+        opacity: 0.28;
       }
       .tomt.funn {
         background: var(--amber-lys);
         border-color: var(--amber);
       }
+      /* nummer uten oppføring i boka: skravert og ikke trykkbar */
+      .tom {
+        background:
+          repeating-linear-gradient(
+            45deg,
+            var(--tom-strek) 0 2px,
+            transparent 2px 7px
+          ),
+          var(--bygg-tom);
+        border-color: var(--bygg-tom-kant);
+        color: #f2f5f4;
+        cursor: default;
+      }
 
+      /* ---------- sidegater ---------- */
       .kryss {
         display: flex;
         align-items: center;
         gap: 10px;
-        padding: 14px 0 12px;
+        padding: 15px 0 13px;
       }
       .kryss .strek {
         flex: 1;
-        height: 7px;
+        height: 9px;
         background: var(--vei);
-        border-top: 1px solid #e3e7e4;
-        border-bottom: 1px solid #e3e7e4;
+        border-top: 1px solid var(--kant-svak);
+        border-bottom: 1px solid var(--kant-svak);
       }
       .kryss .navn {
         font-family: var(--kart);
-        font-size: 12.5px;
-        letter-spacing: 0.05em;
-        color: var(--blekk-svak);
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--rust);
+        background: var(--kort);
+        border: 1px solid var(--kant);
+        border-radius: 999px;
+        padding: 3px 11px 4px;
         white-space: nowrap;
       }
 
-      /* ---------- detaljer ---------- */
+      /* ---------- tegnforklaring ---------- */
+      .tegnforklaring {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 18px;
+        margin: 12px 2px 0;
+        font-family: var(--kart);
+        font-size: 12px;
+        color: var(--blekk-svak);
+      }
+      .tegnforklaring span {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .tegnforklaring i {
+        display: block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--blekk);
+        opacity: 0.5;
+      }
+      .tegnforklaring i.f {
+        border-radius: 1px;
+        background: var(--teal);
+        opacity: 1;
+      }
+      .tegnforklaring i.skala {
+        width: 34px;
+        height: 11px;
+        border-radius: 2px;
+        opacity: 1;
+        border: 1px solid var(--bygg-kant);
+        background: linear-gradient(
+          90deg,
+          var(--bygg-1) 0 33%,
+          var(--bygg-3) 33% 66%,
+          var(--bygg-5) 66% 100%
+        );
+      }
+
+      /* ---------- detaljkort ---------- */
       .kort {
         background: var(--kort);
         border: 1px solid var(--kant);
         border-left: 4px solid var(--amber);
-        margin: 2px 0 12px;
-        padding: 16px 16px 12px;
+        border-radius: 0 3px 3px 0;
+        margin: 4px 0 14px;
+        padding: 16px 18px 13px;
+        box-shadow: 0 10px 20px -18px rgba(0, 0, 0, 0.7);
+        animation: fram 0.18s ease-out;
+      }
+      @keyframes fram {
+        from {
+          opacity: 0;
+          transform: translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
       }
       .kort h2 {
         font-family: var(--kart);
-        font-size: 20px;
-        margin: 0 0 2px;
-        font-weight: 600;
+        font-size: 21px;
+        margin: 0 0 3px;
+        font-weight: 650;
+        letter-spacing: -0.02em;
       }
       .kort .stedsnote {
         font-family: var(--kart);
-        font-size: 12.5px;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
         color: var(--blekk-svak);
         margin: 0 0 14px;
       }
       .person {
-        padding: 11px 0;
-        border-top: 1px solid #e9e6df;
+        padding: 12px 0;
+        border-top: 1px solid var(--kant-svak);
       }
       .person:first-of-type {
         border-top: 0;
@@ -316,34 +559,36 @@
       }
       .person .navn .merke {
         font-family: var(--kart);
-        font-size: 10.5px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        color: var(--teal);
+        font-size: 10px;
+        font-weight: 650;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--kort);
+        background: var(--teal);
         border: 1px solid var(--teal);
-        padding: 1px 5px;
-        margin-left: 7px;
+        padding: 2px 7px;
+        margin-left: 8px;
         vertical-align: 2px;
-        border-radius: 2px;
+        border-radius: 999px;
         display: inline-block;
       }
       .person .stilling {
         font-style: italic;
-        color: #3f4b4e;
+        color: var(--blekk-svak);
         font-size: 15.5px;
       }
       .person .okonomi {
         font-family: var(--kart);
-        font-size: 13.5px;
+        font-size: 12.5px;
         color: var(--blekk-svak);
-        margin-top: 4px;
+        margin-top: 5px;
       }
       .person .okonomi b {
         color: var(--blekk);
         font-weight: 600;
       }
       details.rå {
-        margin-top: 6px;
+        margin-top: 8px;
       }
       details.rå summary {
         font-family: var(--kart);
@@ -354,18 +599,24 @@
         display: inline-block;
         border-bottom: 1px dotted var(--blekk-svak);
       }
+      details.rå summary:hover {
+        color: var(--amber);
+        border-bottom-color: var(--amber);
+      }
       details.rå summary::-webkit-details-marker {
         display: none;
       }
       details.rå p {
-        font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+        font-family: var(--kode);
         font-size: 12.5px;
-        background: #f1efe8;
-        border: 1px solid #e3e0d7;
-        padding: 8px 10px;
-        margin: 8px 0 0;
+        background: var(--papir);
+        border: 1px solid var(--kant-svak);
+        border-left: 3px solid var(--rust);
+        border-radius: 0 3px 3px 0;
+        padding: 9px 11px;
+        margin: 9px 0 0;
         white-space: pre-wrap;
-        color: #3f4b4e;
+        color: var(--blekk-svak);
       }
       .tomt-kort {
         font-family: var(--kart);
@@ -373,32 +624,61 @@
         color: var(--blekk-svak);
       }
 
+      /* ---------- bunntekst ---------- */
       footer {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid var(--bygg-kant);
+        margin-top: 44px;
+        padding-top: 22px;
+        border-top: 1px solid var(--kant);
         font-size: 14px;
         color: var(--blekk-svak);
       }
       footer p {
-        margin: 0 0 10px;
+        margin: 0 0 12px;
         max-width: 56ch;
       }
       .skjult {
         display: none;
       }
+
+      /* ---------- små skjermer ---------- */
+      @media (max-width: 460px) {
+        .asfalt {
+          flex: 0 0 34px;
+        }
+        .tomt,
+        .tom {
+          min-width: 46px;
+          padding: 8px 8px 7px;
+        }
+        .gate {
+          padding: 6px 8px 8px;
+        }
+      }
+
       @media (prefers-reduced-motion: reduce) {
-        * {
+        *,
+        *::before,
+        *::after {
           transition: none !important;
+          animation: none !important;
         }
       }
       @media print {
-        .sokrad,
+        body::before,
+        .verktoy,
         .treff {
           display: none;
         }
+        body {
+          background: #fff;
+        }
+        .gate {
+          box-shadow: none;
+        }
         .kort {
           break-inside: avoid;
+          box-shadow: none;
+          animation: none;
         }
       }
     </style>
@@ -406,7 +686,7 @@
   <body>
     <div class="ramme">
       <header>
-        <h1>Tors gate</h1>
+        <h1>Tors <span>gate</span></h1>
         <p class="undertittel">Kristiansand S &nbsp;·&nbsp; 1964</p>
         <p class="ingress">
           Trykk på et hus for å se hvem som sto oppført der.
@@ -418,17 +698,19 @@
         </div>
       </header>
 
-      <div class="sokrad">
-        <input
-          type="search"
-          id="sok"
-          placeholder="Søk etter navn, f.eks. Knutsen"
-          autocomplete="off"
-          aria-label="Søk etter navn"
-        />
-        <button class="knapp" id="alle" type="button">Åpne alle</button>
+      <div class="verktoy">
+        <div class="sokrad">
+          <input
+            type="search"
+            id="sok"
+            placeholder="Søk etter navn, f.eks. Knutsen"
+            autocomplete="off"
+            aria-label="Søk etter navn"
+          />
+          <button class="knapp" id="alle" type="button">Åpne alle</button>
+        </div>
+        <p class="treff" id="treff"></p>
       </div>
-      <p class="treff" id="treff"></p>
 
       <p class="retning">
         Gata leses nedover, fra vest (øverst) mot øst (nederst).
@@ -438,27 +720,21 @@
       </div>
       <div class="gate" id="gate"></div>
 
+      <div class="tegnforklaring">
+        <span><i></i> oppføring i boka</span>
+        <span><i class="f"></i> forretning</span>
+        <span><i class="skala"></i> flere oppføringer, mørkere tomt</span>
+      </div>
+
       <footer>
         <p>
-          Navnene er hentet fra en oppslagsbok fra 1964 for Kristiansand S, med
-          formue og inntekt for inntektsåret 1962. Bare de som faktisk er
-          oppført i boka er med her – husstander uten oppføring mangler.
+          Navnene er hentet fra en oppslagsbok for Kristiansand S fra 1964. Bare
+          de som står i boka er med.
         </p>
         <p>
-          Husene er tegnet skjematisk, ikke i målestokk: partall (sørsiden, mot
-          Marviksveien) til venstre, oddetall (nordsiden, mot Agder allé) til
-          høyre, i rekkefølge nedover fra vest mot øst. To hus står på samme
-          linje når de ligger rett overfor hverandre i gata, slik de gjør på
-          kartet – ikke fordi numrene følger etter hverandre. Sidene er ulikt
-          bebygd, så mange linjer har hus bare på én side. Rekkefølgen og
-          sidegatene følger dagens kart (kart.1881.no, © Norkart AS / Geovekst
-          og kommunene / OpenStreetMap). Husnummer er endret enkelte steder
-          siden 1964 – særlig på nordsiden, der numrene den gangen lå lavere enn
-          i dag – så et nummer her trenger ikke peke på den samme bygningen nå.
-        </p>
-        <p>
-          Trykk «Rå tekst fra boka» under et navn for å se den opprinnelige
-          linja slik den ble lest av maskinen.
+          Kartet er skjematisk: to hus står på samme linje når de ligger rett
+          overfor hverandre i gata. Husnummer er endret enkelte steder siden
+          1964.
         </p>
       </footer>
     </div>
@@ -2542,6 +2818,8 @@
         b.className = "tomt";
         b.setAttribute("aria-expanded", "false");
         b.dataset.hus = h.label;
+        /* styrer hvor mørk bygningsflaten blir (se .tomt[data-ant]) */
+        b.dataset.ant = Math.min(h.p.length, 5);
         const prikker = h.p
           .map((x) => '<i class="' + (erFirma(x) ? "f" : "") + '"></i>')
           .join("");
@@ -2574,10 +2852,23 @@
          slik at ingen oppføring forsvinner stille hvis lista endres. */
       const glemt = HUS.filter((h) => !plassert.has(h.label));
       if (glemt.length) {
-        console.warn("Ikke plassert i GATA:", glemt.map((h) => h.label));
+        console.warn(
+          "Ikke plassert i GATA:",
+          glemt.map((h) => h.label),
+        );
         const { sor, nord, holder } = nyRad();
         glemt.forEach((h) => tegnHus(h.label, h.n % 2 ? nord : sor, holder));
       }
+
+      /* ---- kleb verktøylinja ---- */
+      const verktoy = document.querySelector(".verktoy");
+      const merkFest = () =>
+        verktoy.classList.toggle(
+          "festet",
+          verktoy.getBoundingClientRect().top <= 0,
+        );
+      addEventListener("scroll", merkFest, { passive: true });
+      merkFest();
 
       /* ---- detaljkort ---- */
       function kortHTML(h) {
